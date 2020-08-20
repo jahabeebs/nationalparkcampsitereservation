@@ -30,7 +30,7 @@ public class CampgroundCLI {
 	private static final String CAMP_MENU_BACK = "Back";
 	private static final String[] CAMP_MENU_OPTIONS = new String[] {CAMP_MENU_OPTION_ALL_CAMPGROUNDS, CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS,CAMP_MENU_BACK};
 	private Menu menu;
- 	private long selectedPark;
+ 	private String selectedPark = "";
 	private long selectedCampgroundId = 0;
 	private long selectedSiteId = 0;
 //	private List<Site> availableSites = null;
@@ -70,7 +70,7 @@ public class CampgroundCLI {
 		for (Park park : parkDAO.getAllParks()) {
 			parkArrayList.add(park.getName());
 		}
-		menu.getChoiceFromOptions(parkArrayList.toArray());
+		menu.getChoiceFromOptions(parkArrayList.toArray()); 
 		campMenu();
 	}
 	
@@ -79,7 +79,7 @@ public class CampgroundCLI {
 	private void campMenu() {
 		String choice = (String)menu.getChoiceFromOptions(CAMP_MENU_OPTIONS);
 		if(choice.equals(CAMP_MENU_OPTION_ALL_CAMPGROUNDS)) {
-			menu.getChoiceFromOptions(campgroundDAO.getCampgroundByParkId(selectedPark);
+			menu.getChoiceFromOptions(options);
 		} else if (choice.equals(CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS)) {
 			System.out.println("Search for Campground Reservation");
 			reservations();
