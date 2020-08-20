@@ -1,6 +1,7 @@
 package com.techelevator;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -8,11 +9,13 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 import com.techelevator.view.Menu;
 
+import JDBC.JDBCCampgroundDAO;
+
 public class CampgroundCLI {
 	
-	private static final String MAIN_MENU_OPTIONS_PARKS = "View Parks, Campgrounds, Make Reservation";
+	private static final String MAIN_MENU_OPTIONS_LIST = "View Parks to find Campgrounds to make a Reservation";
 	private static final String MAIN_MENU_EXIT = "Exit";
-	private static final String[] MAIN_MENU_OPTIONS = new String[] {MAIN_MENU_OPTIONS_PARKS, MAIN_MENU_EXIT};
+	private static final String[] MAIN_MENU_OPTIONS = new String[] {MAIN_MENU_OPTIONS_LIST, MAIN_MENU_EXIT};
 	private static final String PARK_MENU_DISPLAY_PARKS = "Select a Park";
 	private static final String[] PARK_MENU_OPTIONS = new String[] { PARK_MENU_DISPLAY_PARKS };
 	private static final String RES_BACK = "Back";
@@ -30,15 +33,11 @@ public class CampgroundCLI {
 	private LocalDate arrival;
 	private LocalDate departure;
 //	private ReservationDAO reservationDAO;
-//	private CampgroundDAO campgroundDAO;
+	private CampgroundDAO campgroundDAO;
 //  private SiteDAO siteDAO;
-//	private ParkDAO parkDAO
+	private ParkDAO parkDAO;
 	
-	public CampgroundCLI(Menu menu) {
-		this.menu = menu;
-	}
 	
-
 	public static void main(String[] args) {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/campground");
@@ -50,19 +49,53 @@ public class CampgroundCLI {
 	
 
 	public CampgroundCLI(DataSource datasource) {
+		this.menu = new Menu(System.in, System.out);
 		// create your DAOs here
-		//parkDAO = new JDBCParkDAO(dataSource);
-	//	campgroundDAO = new JDBCCampgroundDAO(dataSource);
-		//siteDAO = new JDBCSiteDAO(dataSource);
-		//reservationDAO = new JDBCReservationDAO(dataSource);
+		//parkDAO = new JDBCParkDAO(datasource);
+		campgroundDAO = new JDBCCampgroundDAO(datasource);
+		//siteDAO = new JDBCSiteDAO(datasource);
+		//reservationDAO = new JDBCReservationDAO(datasource);
 		
+	}
+	
+	
+	private void parks() {
+		System.out.println("Select a Park");
+		//List<Park> results = parkDAO.getAllParks();
+		campMenu ();
+	}
+	
+	
+	
+	private void campMenu () {
+		String choice = (String)menu.getChoiceFromOptions(CAMP_MENU_OPTIONS);
+		if(choice.equals(CAMP_MENU_OPTION_ALL_CAMPGROUNDS)) {
+
+		} else if (choice.equals(CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS)) {
+			System.out.println("Search for Campground Reservation");
+			reservations();
+		} else if (choice.equals(CAMP_MENU_BACK)) {
+			parks();
+		}
+	}
+	
+	
+	private void reservations() {
+		System.out.println("Select a Command");
+		
+		String choice = (String)menu.getChoiceFromOptions(RESERVATION_MENU_OPTIONS);
+		if(choice.equals(RESERVATION_MENU_SEARCH_AVAILABLE)) {
+			System.out.println("menu works");
+		} else if (choice.equals(RES_BACK)) {
+			campMenu();
+		}
 	}
 
 	public void run() {
-	System.out.println("National Park Campsite Reservation");
+	System.out.println("National Park Campsite Guide And Reservations");
 		String choice = (String)menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
-		if(choice.equals(MAIN_MENU_OPTIONS_PARKS)) {
-		//	Parks();
+		if(choice.equals(MAIN_MENU_OPTIONS_LIST)) {
+			parks();
 			System.out.println("menu works");
 		} else if (choice.equals(MAIN_MENU_EXIT)) {
 			System.exit(0);
