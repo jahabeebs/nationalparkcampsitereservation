@@ -21,21 +21,13 @@ public class JDBCReservationDAO implements ReservationDAO {
 	public long makeReservation(long site_id, String name, LocalDate startDate, LocalDate endDate) {
 		
 		String sqlAddReservation = "INSERT INTO reservation (reservation_id, site_id, name, from_date, to_date) VALUES (?,?,?,?,?)";
-		return site_id;
+		SqlRowSet result = jdbcTemplate.queryForRowSet(sqlAddReservation, site_id, name, startDate, endDate);
+		result.next();
+		Long addReservationID = result.getLong(1);
+		return addReservationID;
 	}
 	
-	private Reservation mapRowToReservation(SqlRowSet results) {
-		Reservation reservation;
-		reservation = new Reservation();
-		reservation.setResId(results.getLong("reservation_id"));
-		reservation.setSiteId(results.getLong("site_id"));
-		reservation.setName(results.getString("name"));
-		reservation.setFromDate(results.getDate("from_date").toLocalDate());
-		reservation.setToDate(results.getDate("to_date").toLocalDate());
-		reservation.setMakeDate(results.getDate("create_date").toLocalDate());
-		return reservation;
-	}
-		
+
 	
 	
 
