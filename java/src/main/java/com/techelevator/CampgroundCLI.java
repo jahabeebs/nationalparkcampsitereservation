@@ -1,5 +1,7 @@
 package com.techelevator;
 
+import java.time.LocalDate;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -25,8 +27,8 @@ public class CampgroundCLI {
 	private long selectedCampgroundId = 0;
 	private long selectedSiteId = 0;
 //	private List<Site> availableSites = null;
-//	private arrival;
-//	private departure;
+	private LocalDate arrival;
+	private LocalDate departure;
 //	private ReservationDAO reservationDAO;
 //	private CampgroundDAO campgroundDAO;
 //  private SiteDAO siteDAO;
