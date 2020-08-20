@@ -8,10 +8,11 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import com.techelevator.CampsiteDAO.CampSiteDAO;
+import com.techelevator.CampSiteDAO;
 import com.techelevator.view.Menu;
 
 import JDBC.JDBCCampgroundDAO;
+import JDBC.JDBCCampsiteDAO;
 import JDBC.JDBCParkDAO;
 import JDBC.JDBCReservationDAO;
 
@@ -58,7 +59,7 @@ public class CampgroundCLI {
 		parkDAO = new JDBCParkDAO(dataSource);
 		campgroundDAO = new JDBCCampgroundDAO(dataSource);
 		reservationDAO = new JDBCReservationDAO(dataSource);
-		//campsiteDAO = new JDBCSiteDAO(dataSource);
+		CampSiteDAO = new JDBCCampsiteDAO(dataSource);
 		reservationDAO = new JDBCReservationDAO(dataSource);
 		
 	}
@@ -66,11 +67,12 @@ public class CampgroundCLI {
 	
 	private void parks() {
 		System.out.println("Select a Park");
-		ArrayList parkArrayList = new ArrayList();
+		ArrayList <String> parkArrayList = new ArrayList<>();
 		for (Park park : parkDAO.getAllParks()) {
 			parkArrayList.add(park.getName());
 		}
-		menu.getChoiceFromOptions(parkArrayList.toArray()); 
+		selectedPark = (String)menu.getChoiceFromOptions(parkArrayList.toArray()); 
+
 		campMenu();
 	}
 	
@@ -79,22 +81,22 @@ public class CampgroundCLI {
 	private void campMenu() {
 		String choice = (String)menu.getChoiceFromOptions(CAMP_MENU_OPTIONS);
 		if(choice.equals(CAMP_MENU_OPTION_ALL_CAMPGROUNDS)) {
-			menu.getChoiceFromOptions(options);
-		} else if (choice.equals(CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS)) {
+			//menu.getChoiceFromOptions(campgroundDAO.getCampgroundByParkId(selectedPark));
+		}
+		 else if (choice.equals(CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS)) {
 			System.out.println("Search for Campground Reservation");
 			reservations();
 		} else if (choice.equals(CAMP_MENU_BACK)) {
 			parks();
 		}
 	}
+
 	
 	
 	private void reservations() {
 		System.out.println("Select a Command");
-		
 		String choice = (String)menu.getChoiceFromOptions(RESERVATION_MENU_OPTIONS);
 		if(choice.equals(RESERVATION_MENU_SEARCH_AVAILABLE)) {
-			System.out.println("menu works");
 		} else if (choice.equals(RES_BACK)) {
 			campMenu();
 		}

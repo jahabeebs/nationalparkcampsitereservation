@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import com.techelevator.CampSite;
-import com.techelevator.CampsiteDAO.CampSiteDAO;
+import com.techelevator.CampSiteDAO;
 
 public class JDBCCampsiteDAO implements CampSiteDAO {
 	
