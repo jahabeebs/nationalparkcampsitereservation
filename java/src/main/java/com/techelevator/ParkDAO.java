@@ -1,5 +1,7 @@
 package com.techelevator;
 
-public interface ParkDAO {
+import java.util.List;
 
+public interface ParkDAO {
+	public List <Park> getAllParks();
 }
