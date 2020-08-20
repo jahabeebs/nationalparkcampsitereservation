@@ -1,6 +1,6 @@
 package com.techelevator;
 
-public class CampSite {
+public class SiteOfCamp {
 
 	private long siteId;
 	private int campGroundId;

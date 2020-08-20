@@ -8,13 +8,14 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import com.techelevator.CampSiteDAO;
+
 import com.techelevator.view.Menu;
 
 import JDBC.JDBCCampgroundDAO;
-import JDBC.JDBCCampsiteDAO;
+
 import JDBC.JDBCParkDAO;
 import JDBC.JDBCReservationDAO;
+import JDBC.JDBCSiteOfCampDAO;
 
 public class CampgroundCLI {
 	
@@ -34,12 +35,12 @@ public class CampgroundCLI {
  	private String selectedPark = "";
 	private long selectedCampgroundId = 0;
 	private long selectedSiteId = 0;
-	private List<CampSite> availableSites = null;
+	private List<SiteOfCamp> availableSites = null;
 	private LocalDate arrival;
 	private LocalDate departure;
 	private JDBCReservationDAO reservationDAO;
 	private CampgroundDAO campgroundDAO;
-	private CampSiteDAO siteDAO;
+	private SiteOfCampDAO siteDAO;
 	private ParkDAO parkDAO;
 	
 	
@@ -59,9 +60,7 @@ public class CampgroundCLI {
 		parkDAO = new JDBCParkDAO(dataSource);
 		campgroundDAO = new JDBCCampgroundDAO(dataSource);
 		reservationDAO = new JDBCReservationDAO(dataSource);
-
-		reservationDAO = new JDBCReservationDAO(dataSource);
-		
+		siteDAO = new JDBCSiteOfCampDAO(dataSource);
 	}
 	
 	
@@ -81,7 +80,7 @@ public class CampgroundCLI {
 	private void campMenu() {
 		String choice = (String)menu.getChoiceFromOptions(CAMP_MENU_OPTIONS);
 		if(choice.equals(CAMP_MENU_OPTION_ALL_CAMPGROUNDS)) {
-			//menu.getChoiceFromOptions(campgroundDAO.getCampgroundByParkId(selectedPark));
+		
 		}
 		 else if (choice.equals(CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS)) {
 			System.out.println("Search for Campground Reservation");
