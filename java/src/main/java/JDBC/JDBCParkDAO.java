@@ -12,16 +12,16 @@ import com.techelevator.Park;
 import com.techelevator.ParkDAO;
 
 public class JDBCParkDAO implements ParkDAO {
-	
+
 	private JdbcTemplate jdbcTemplate;
-	
+
 	public JDBCParkDAO(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
-	
+
 	@Override
 	public List<Park> getAllParks() {
-		ArrayList <Park> ParkList = new ArrayList<>();
+		ArrayList<Park> ParkList = new ArrayList<>();
 		String sqlPark = "SELECT * FROM park ORDER BY name";
 		SqlRowSet parkResults = jdbcTemplate.queryForRowSet(sqlPark);
 		while (parkResults.next()) {
@@ -30,7 +30,7 @@ public class JDBCParkDAO implements ParkDAO {
 		}
 		return ParkList;
 	}
-	
+
 	private Park mapRowToPark(SqlRowSet parkResults) {
 		Park park = new Park();
 		park.setParkId(parkResults.getLong("park_id"));
@@ -43,4 +43,3 @@ public class JDBCParkDAO implements ParkDAO {
 		return park;
 	}
 }
-

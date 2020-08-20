@@ -12,6 +12,7 @@ import com.techelevator.CampsiteDAO.CampSiteDAO;
 import com.techelevator.view.Menu;
 
 import JDBC.JDBCCampgroundDAO;
+import JDBC.JDBCCampsiteDAO;
 import JDBC.JDBCParkDAO;
 import JDBC.JDBCReservationDAO;
 
@@ -58,7 +59,7 @@ public class CampgroundCLI {
 		parkDAO = new JDBCParkDAO(dataSource);
 		campgroundDAO = new JDBCCampgroundDAO(dataSource);
 		reservationDAO = new JDBCReservationDAO(dataSource);
-		//campsiteDAO = new JDBCSiteDAO(dataSource);
+		siteDAO = new JDBCCampsiteDAO();
 		reservationDAO = new JDBCReservationDAO(dataSource);
 		
 	}
