@@ -16,7 +16,6 @@ public class JDBCReservationDAO {
 	public JDBCReservationDAO(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
-	
 
 	public long makeReservation(long site_id, String name, LocalDate startDate, LocalDate endDate) {
 		
