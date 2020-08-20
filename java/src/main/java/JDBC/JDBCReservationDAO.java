@@ -8,8 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import com.techelevator.Reservation;
+import com.techelevator.ReservationDAO;
 
-public class JDBCReservationDAO {
+public class JDBCReservationDAO implements ReservationDAO {
 	
 	private JdbcTemplate jdbcTemplate;
 	
