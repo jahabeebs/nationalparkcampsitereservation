@@ -10,6 +10,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import com.techelevator.view.Menu;
 
 import JDBC.JDBCCampgroundDAO;
+import JDBC.JDBCParkDAO;
+import JDBC.JDBCReservationDAO;
 
 public class CampgroundCLI {
 	
@@ -32,7 +34,7 @@ public class CampgroundCLI {
 //	private List<Site> availableSites = null;
 	private LocalDate arrival;
 	private LocalDate departure;
-//	private ReservationDAO reservationDAO;
+	private JDBCReservationDAO reservationDAO;
 	private CampgroundDAO campgroundDAO;
 //  private SiteDAO siteDAO;
 	private ParkDAO parkDAO;
@@ -51,10 +53,10 @@ public class CampgroundCLI {
 	public CampgroundCLI(DataSource datasource) {
 		this.menu = new Menu(System.in, System.out);
 		// create your DAOs here
-		//parkDAO = new JDBCParkDAO(datasource);
+		parkDAO = new JDBCParkDAO(datasource);
 		campgroundDAO = new JDBCCampgroundDAO(datasource);
 		//siteDAO = new JDBCSiteDAO(datasource);
-		//reservationDAO = new JDBCReservationDAO(datasource);
+		reservationDAO = new JDBCReservationDAO(datasource);
 		
 	}
 	
