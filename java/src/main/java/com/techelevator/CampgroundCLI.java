@@ -33,7 +33,7 @@ public class CampgroundCLI {
  	private long selectedPark;
 	private long selectedCampgroundId = 0;
 	private long selectedSiteId = 0;
-//	private List<Site> availableSites = null;
+	private List<CampSite> availableSites = null;
 	private LocalDate arrival;
 	private LocalDate departure;
 	private JDBCReservationDAO reservationDAO;
