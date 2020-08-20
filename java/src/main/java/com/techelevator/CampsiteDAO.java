@@ -7,7 +7,7 @@ public class CampsiteDAO {
 	
 	public interface CampSiteDAO {
 		
-		public List<CampSite> getAvailableSitesByCampgroundId(int campgroundId, LocalDate fromDate, LocalDate toDate);
+		public List<CampSite> getAvailableSitesByCampId(int campgroundId, LocalDate fromDate, LocalDate toDate);
 
 	}
 
