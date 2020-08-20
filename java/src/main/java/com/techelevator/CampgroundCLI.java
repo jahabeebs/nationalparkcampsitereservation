@@ -59,7 +59,7 @@ public class CampgroundCLI {
 		parkDAO = new JDBCParkDAO(dataSource);
 		campgroundDAO = new JDBCCampgroundDAO(dataSource);
 		reservationDAO = new JDBCReservationDAO(dataSource);
-		siteDAO = new JDBCCampsiteDAO();
+		siteDAO = new JDBCCampsiteDAO(dataSource);
 		reservationDAO = new JDBCReservationDAO(dataSource);
 		
 	}
