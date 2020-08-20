@@ -1,6 +1,8 @@
 package com.techelevator;
 
+import java.util.List;
+
 public interface CampgroundDAO {
 
-	public void view();
+	public List<Campground> getCampgroundByParkId(long id);
 }

@@ -3,17 +3,25 @@ package com.techelevator;
 import java.math.BigDecimal;
 
 public class Campground {
-	private long campground_id;
+
+	private Long campground_id;
+	private Long parkId;
 	private String name;
 	private double openFromMM;
 	private double openToMM;
-	private BigDecimal dailyFee;
+	private BigDecimal moneyFee;
 	
 	public Long getCampground_id() {
 		return campground_id;
 	}
 	public void setCampground_id(Long campground_id) {
 		this.campground_id = campground_id;
+	}
+	public Long getParkId() {
+		return parkId;
+	}
+	public void setParkId(Long parkId) {
+		this.parkId = parkId;
 	}
 	public String getName() {
 		return name;
@@ -33,10 +41,16 @@ public class Campground {
 	public void setOpenToMM(double openToMM) {
 		this.openToMM = openToMM;
 	}
-	public BigDecimal getDailyFee() {
-		return dailyFee;
+	public BigDecimal getMoneyFee() {
+		return moneyFee;
 	}
-	public void setDailyFee(BigDecimal dailyFee) {
-		this.dailyFee = dailyFee;
+	public void setMoneyFee(BigDecimal moneyFee) {
+		this.moneyFee = moneyFee;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 }
+
