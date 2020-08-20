@@ -21,27 +21,27 @@ private JdbcTemplate jdbcTemplate;
 
 	@Override
 	public List<Campground> getCampgroundByParkId(long id) {
-		List<Campground> campgrounds = new ArrayList<Campground>();
+		List<Campground> campgroundList = new ArrayList<Campground>();
 		String sqlGetCampgroundsByParkId = "SELECT * FROM campground WHERE park_id = ?";
 		Campground theCampground;
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetCampgroundsByParkId, id);
 		while(results.next()) {
 			theCampground = mapRowToCampground(results);
-			campgrounds.add(theCampground);
+			campgroundList.add(theCampground);
 		}
-		return campgrounds;
+		return campgroundList;
 	}
 		
 		private Campground mapRowToCampground(SqlRowSet results) {
-			Campground theCampground;
-			theCampground = new Campground();
-			theCampground.setCampground_id(results.getLong("campground_id"));
-			theCampground.setParkId(results.getLong("park_id"));
-			theCampground.setName(results.getString("name"));
-			theCampground.setOpenFromMM(results.getInt("open_from_mm"));
-			theCampground.setOpenToMM(results.getInt("open_to_mm"));
-			theCampground.setMoneyFee(results.getBigDecimal("daily_fee"));
-			return theCampground;
+			Campground campground;
+			campground = new Campground();
+			campground.setCampground_id(results.getLong("campground_id"));
+			campground.setParkId(results.getLong("park_id"));
+			campground.setName(results.getString("name"));
+			campground.setOpenFromMM(results.getInt("open_from_mm"));
+			campground.setOpenToMM(results.getInt("open_to_mm"));
+			campground.setMoneyFee(results.getBigDecimal("daily_fee"));
+			return campground;
 		
 	}
 }

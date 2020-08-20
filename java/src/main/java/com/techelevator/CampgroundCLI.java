@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
+import com.techelevator.CampsiteDAO.CampSiteDAO;
 import com.techelevator.view.Menu;
 
 import JDBC.JDBCCampgroundDAO;
@@ -36,7 +37,7 @@ public class CampgroundCLI {
 	private LocalDate departure;
 	private JDBCReservationDAO reservationDAO;
 	private CampgroundDAO campgroundDAO;
-//  private SiteDAO siteDAO;
+	private CampSiteDAO siteDAO;
 	private ParkDAO parkDAO;
 	
 	
