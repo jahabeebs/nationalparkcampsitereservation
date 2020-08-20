@@ -1,6 +1,7 @@
 package com.techelevator;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -28,7 +29,7 @@ public class CampgroundCLI {
 	private static final String CAMP_MENU_BACK = "Back";
 	private static final String[] CAMP_MENU_OPTIONS = new String[] {CAMP_MENU_OPTION_ALL_CAMPGROUNDS, CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS,CAMP_MENU_BACK};
 	private Menu menu;
-//	private Park selectedPark;
+ 	private long selectedPark;
 	private long selectedCampgroundId = 0;
 	private long selectedSiteId = 0;
 //	private List<Site> availableSites = null;
@@ -50,29 +51,34 @@ public class CampgroundCLI {
 	}
 	
 
-	public CampgroundCLI(DataSource datasource) {
+	public CampgroundCLI(DataSource dataSource) {
 		this.menu = new Menu(System.in, System.out);
 		// create your DAOs here
-		parkDAO = new JDBCParkDAO(datasource);
-		campgroundDAO = new JDBCCampgroundDAO(datasource);
-		//siteDAO = new JDBCSiteDAO(datasource);
-		reservationDAO = new JDBCReservationDAO(datasource);
+		parkDAO = new JDBCParkDAO(dataSource);
+		campgroundDAO = new JDBCCampgroundDAO(dataSource);
+		reservationDAO = new JDBCReservationDAO(dataSource);
+		//campsiteDAO = new JDBCSiteDAO(dataSource);
+		reservationDAO = new JDBCReservationDAO(dataSource);
 		
 	}
 	
 	
 	private void parks() {
 		System.out.println("Select a Park");
-		//List<Park> results = parkDAO.getAllParks();
-		campMenu ();
+		ArrayList parkArrayList = new ArrayList();
+		for (Park park : parkDAO.getAllParks()) {
+			parkArrayList.add(park.getName());
+		}
+		menu.getChoiceFromOptions(parkArrayList.toArray());
+		campMenu();
 	}
 	
 	
 	
-	private void campMenu () {
+	private void campMenu() {
 		String choice = (String)menu.getChoiceFromOptions(CAMP_MENU_OPTIONS);
 		if(choice.equals(CAMP_MENU_OPTION_ALL_CAMPGROUNDS)) {
-
+			menu.getChoiceFromOptions(campgroundDAO.getCampgroundByParkId(selectedPark);
 		} else if (choice.equals(CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS)) {
 			System.out.println("Search for Campground Reservation");
 			reservations();
