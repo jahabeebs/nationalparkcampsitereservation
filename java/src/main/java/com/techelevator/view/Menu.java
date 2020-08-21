@@ -51,4 +51,9 @@ public class Menu {
 		out.print("\nPlease choose an option >>> ");
 		out.flush();
 	}
+
+	public void displayCampgroundsInfo() {
+		// TODO Auto-generated method stub
+		
+	}
 }

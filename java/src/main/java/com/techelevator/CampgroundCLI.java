@@ -8,13 +8,14 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import com.techelevator.CampSiteDAO;
+
 import com.techelevator.view.Menu;
 
 import JDBC.JDBCCampgroundDAO;
-import JDBC.JDBCCampsiteDAO;
+
 import JDBC.JDBCParkDAO;
 import JDBC.JDBCReservationDAO;
+import JDBC.JDBCSiteOfCampDAO;
 
 public class CampgroundCLI {
 	
@@ -31,15 +32,16 @@ public class CampgroundCLI {
 	private static final String CAMP_MENU_BACK = "Back";
 	private static final String[] CAMP_MENU_OPTIONS = new String[] {CAMP_MENU_OPTION_ALL_CAMPGROUNDS, CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS,CAMP_MENU_BACK};
 	private Menu menu;
- 	private String selectedPark = "";
+	private String selectedCampGround = "";
+	private String selectedPark = "";
 	private long selectedCampgroundId = 0;
 	private long selectedSiteId = 0;
-	private List<CampSite> availableSites = null;
+	private List<SiteOfCamp> availableSites = null;
 	private LocalDate arrival;
 	private LocalDate departure;
 	private JDBCReservationDAO reservationDAO;
 	private CampgroundDAO campgroundDAO;
-	private CampSiteDAO siteDAO;
+	private SiteOfCampDAO siteDAO;
 	private ParkDAO parkDAO;
 	
 	
@@ -55,13 +57,16 @@ public class CampgroundCLI {
 
 	public CampgroundCLI(DataSource dataSource) {
 		this.menu = new Menu(System.in, System.out);
-		// create your DAOs here
 		parkDAO = new JDBCParkDAO(dataSource);
 		campgroundDAO = new JDBCCampgroundDAO(dataSource);
 		reservationDAO = new JDBCReservationDAO(dataSource);
+<<<<<<< HEAD
 		siteDAO = new JDBCCampsiteDAO(dataSource);
 		reservationDAO = new JDBCReservationDAO(dataSource);
 		
+=======
+		siteDAO = new JDBCSiteOfCampDAO(dataSource);
+>>>>>>> db8914a489f5066de04d6d9500c3e73a09558b82
 	}
 	
 	
@@ -71,17 +76,21 @@ public class CampgroundCLI {
 		for (Park park : parkDAO.getAllParks()) {
 			parkArrayList.add(park.getName());
 		}
-		selectedPark = (String)menu.getChoiceFromOptions(parkArrayList.toArray()); 
+		selectedCampGround = (String)menu.getChoiceFromOptions(parkArrayList.toArray()); 
 
 		campMenu();
 	}
 	
-	
-	
 	private void campMenu() {
 		String choice = (String)menu.getChoiceFromOptions(CAMP_MENU_OPTIONS);
-		if(choice.equals(CAMP_MENU_OPTION_ALL_CAMPGROUNDS)) {
-			//menu.getChoiceFromOptions(campgroundDAO.getCampgroundByParkId(selectedPark));
+		if(choice.equals("View Campgrounds")) {
+			ArrayList <String> campgroundList = new ArrayList<>();
+			for (Campground campground : campgroundDAO.getCampgroundByParkId(selectedCampgroundId)) {
+				campgroundList.add(campground.getName());
+				System.out.println(campgroundList);
+			}
+			String selectedSite = (String)menu.getChoiceFromOptions(campgroundList.toArray()); 
+			System.out.println(campgroundList);
 		}
 		 else if (choice.equals(CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS)) {
 			System.out.println("Search for Campground Reservation");
@@ -110,7 +119,6 @@ public class CampgroundCLI {
 		String choice = (String)menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 		if(choice.equals(MAIN_MENU_OPTIONS_LIST)) {
 			parks();
-			System.out.println("menu works");
 		} else if (choice.equals(MAIN_MENU_EXIT)) {
 			System.exit(0);
 		}

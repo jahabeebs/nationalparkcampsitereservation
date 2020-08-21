@@ -1,7 +1,8 @@
 package com.techelevator;
 
-public class CampSite {
-
+public class SiteOfCamp {
+	
+	private String name;
 	private long siteId;
 	private int campGroundId;
 	private int siteNumber;
@@ -65,5 +66,14 @@ public class CampSite {
 	public void setHasUtilities(boolean hasUtilities) {
 		this.hasUtilities = hasUtilities;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 
 }

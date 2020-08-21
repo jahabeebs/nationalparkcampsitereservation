@@ -33,8 +33,7 @@ public class JDBCCampgroundDAO implements CampgroundDAO {
 	}
 
 	private Campground mapRowToCampground(SqlRowSet results) {
-		Campground campground;
-		campground = new Campground();
+		Campground campground =  new Campground(); 
 		campground.setCampground_id(results.getLong("campground_id"));
 		campground.setParkId(results.getLong("park_id"));
 		campground.setName(results.getString("name"));
