@@ -80,7 +80,6 @@ public class CampgroundCLI {
 		System.out.println(selectedCampGround);
 		System.out.println(selectedCampGround);
 		String data =  selectedCampGround;
-		System.out.println("fuck");
 		System.out.println(data);
 		
 		selectedCampgroundId = campgroundDAO.getparkIdByParkname(data);
