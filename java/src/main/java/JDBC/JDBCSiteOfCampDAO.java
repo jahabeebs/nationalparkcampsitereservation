@@ -21,10 +21,25 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 	}
 
 	@Override
+	public List<SiteOfCamp> getSitesByCampgroundId(int campgroundId) {
+		List<SiteOfCamp> sitesList = new ArrayList<SiteOfCamp>();
+		String sqlSitesbyId = "SELECT * FROM site JOIN campground on site.campground_id = campground.campground_id "
+				+ "WHERE site.campground_id = ? ";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSitesbyId, campgroundId);
+		while (results.next()) {
+			SiteOfCamp siteList = mapRowToSite(results);
+			sitesList.add(siteList);
+		}
+		// TODO Auto-generated method stub
+		return sitesList;
+	}
+	
+		
+	
 	public List<SiteOfCamp> getAvailableSitesByCampgroundId(int campgroundId, LocalDate fromDate, LocalDate toDate) {
 
 		List<SiteOfCamp> availableSites = new ArrayList<SiteOfCamp>();
-		String sqlAvailableSites = "JOIN campground on site.campground_id = campground.campground_id "
+		String sqlAvailableSites = "SELECT * FROM site JOIN campground on site.campground_id = campground.campground_id "
 				+ "WHERE site.campground_id = ? " + "and site_id NOT IN " + "(select site.site_id from site "
 				+ "JOIN reservation ON reservation.site_id = site.site_id "
 				+ "WHERE ? > reservation.from_date and ? < reservation.to_date) ";
@@ -53,6 +68,7 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 		return campSite;
 
 	}
+
 
 
 
