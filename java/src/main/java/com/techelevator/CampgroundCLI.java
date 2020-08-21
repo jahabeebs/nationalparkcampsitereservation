@@ -59,7 +59,7 @@ public class CampgroundCLI {
 		parkDAO = new JDBCParkDAO(dataSource);
 		campgroundDAO = new JDBCCampgroundDAO(dataSource);
 		reservationDAO = new JDBCReservationDAO(dataSource);
-		CampSiteDAO = new JDBCCampsiteDAO(dataSource);
+		siteDAO = new JDBCCampsiteDAO(dataSource);
 		reservationDAO = new JDBCReservationDAO(dataSource);
 		
 	}
@@ -97,6 +97,9 @@ public class CampgroundCLI {
 		System.out.println("Select a Command");
 		String choice = (String)menu.getChoiceFromOptions(RESERVATION_MENU_OPTIONS);
 		if(choice.equals(RESERVATION_MENU_SEARCH_AVAILABLE)) {
+			// 1) search available reservation
+			//#1 Name openMonth closeMonth dailyFee
+
 		} else if (choice.equals(RES_BACK)) {
 			campMenu();
 		}
