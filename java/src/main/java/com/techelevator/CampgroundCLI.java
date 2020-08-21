@@ -73,25 +73,34 @@ public class CampgroundCLI {
 		for (Park park : parkDAO.getAllParks()) {
 			parkArrayList.add(park.getName());
 		}
-		//selectedCampgroundId = (Integer)menu.getChoiceFromOptions(parkArrayList.toArray());
-		selectedCampGround = (String)menu.getChoiceFromOptions(parkArrayList.toArray()); 
-		String data =  selectedCampGround;
-	//	System.out.println(data);
+
+		String selectedPark = (String)menu.getChoiceFromOptions(parkArrayList.toArray()); 
+		int parkId = parkDAO.getParkId(selectedPark);
+			
+		List<Campground> campgrounds = campgroundDAO.getCampgroundByParkId(parkId);
 		
-		selectedCampgroundId = campgroundDAO.getparkIdByParkname(data);
-		//System.out.println(selectedCampgroundId);
-		//Long selectedCampgroundId = selectedCampGround.
-		campMenu();
+		selectedCampGround = (String)menu.getChoiceFromOptions(campgrounds.toArray()); 
+		
+//		//selectedCampgroundId = campgroundDAO.getparkIdByParkname(data);
+//		System.out.println(selectedCampgroundId);
+//		//System.out.println(selectedCampgroundId);
+//		//Long selectedCampgroundId = selectedCampGround.
+//		campMenu();
 	}
 	
 	private void campMenu() {
 		String choice = (String)menu.getChoiceFromOptions(CAMP_MENU_OPTIONS);
 			System.out.println(CAMP_MENU_OPTION_ALL_CAMPGROUNDS);
 			ArrayList <String> campgroundList = new ArrayList<>();
-			
-			System.out.println("matching park is " + campgroundDAO.getparkIdByParkname(selectedCampGround));
+
+			System.out.println(selectedCampgroundId);
 			for (Campground campground : campgroundDAO.getCampgroundByParkId(1)) {
 				campgroundList.add(campground.getName());
+				System.out.println(campground.getName() );
+				
+			//for (Campground campground : campsOfParkId) {
+					String price = "$" + campground.getMoneyFee();
+					System.out.println("" + campground.getName().toString() + price);
 			}
 			selectedCampGround = (String)menu.getChoiceFromOptions(campgroundList.toArray()); 
 			System.out.println("selected campground is " + selectedCampGround);
@@ -120,6 +129,14 @@ public class CampgroundCLI {
 //			parks();
 //		}
 //	}
+	
+	
+	
+	private List<String> stringBreak(String description, int i) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
 
 	private void reservations() {
 		System.out.println("Select a Command");
