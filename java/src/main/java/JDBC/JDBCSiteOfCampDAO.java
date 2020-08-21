@@ -38,7 +38,7 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 	}
 	
 		
-	
+	@Override
 	public List<SiteOfCamp> getAvailableSitesByCampgroundId(int campgroundId, LocalDate fromDate, LocalDate toDate) {
 		
 		String arrival = "";

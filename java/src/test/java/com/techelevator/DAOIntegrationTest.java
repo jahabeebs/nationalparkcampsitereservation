@@ -1,5 +1,7 @@
 package com.techelevator;
 
+import static org.junit.Assert.assertEquals;
+
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
@@ -7,7 +9,10 @@ import javax.sql.DataSource;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+
+import JDBC.JDBCCampgroundDAO;
 
 public abstract class DAOIntegrationTest {
 
