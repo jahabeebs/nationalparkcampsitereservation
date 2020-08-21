@@ -72,18 +72,13 @@ public class CampgroundCLI {
 		ArrayList <String> parkArrayList = new ArrayList<>();
 		for (Park park : parkDAO.getAllParks()) {
 			parkArrayList.add(park.getName());
-			System.out.println(parkArrayList);
 		}
 		//selectedCampgroundId = (Integer)menu.getChoiceFromOptions(parkArrayList.toArray());
 		selectedCampGround = (String)menu.getChoiceFromOptions(parkArrayList.toArray()); 
-		System.out.println(selectedCampGround);
-		System.out.println(selectedCampGround);
-		System.out.println(selectedCampGround);
 		String data =  selectedCampGround;
-		System.out.println(data);
+	//	System.out.println(data);
 		
 		selectedCampgroundId = campgroundDAO.getparkIdByParkname(data);
-		System.out.println(selectedCampgroundId);
 		//System.out.println(selectedCampgroundId);
 		//Long selectedCampgroundId = selectedCampGround.
 		campMenu();
@@ -91,18 +86,16 @@ public class CampgroundCLI {
 	
 	private void campMenu() {
 		String choice = (String)menu.getChoiceFromOptions(CAMP_MENU_OPTIONS);
-		
-			System.out.println(selectedCampgroundId);
 			System.out.println(CAMP_MENU_OPTION_ALL_CAMPGROUNDS);
 			ArrayList <String> campgroundList = new ArrayList<>();
-			System.out.println(selectedCampgroundId);
 			
+			System.out.println("matching park is " + campgroundDAO.getparkIdByParkname(selectedCampGround));
 			for (Campground campground : campgroundDAO.getCampgroundByParkId(1)) {
 				campgroundList.add(campground.getName());
-				System.out.println(campground.getName() );
-				
 			}
 			selectedCampGround = (String)menu.getChoiceFromOptions(campgroundList.toArray()); 
+			System.out.println("selected campground is " + selectedCampGround);
+
 			
 			
 //			for (Park park : parkDAO.getAllParks()) {
@@ -117,8 +110,8 @@ public class CampgroundCLI {
 
 		
 			String selectedSite = (String)menu.getChoiceFromOptions(campgroundList.toArray()); 
-			System.out.println(campgroundList);
-			System.out.println(campgroundList.toString());
+			//System.out.println(campgroundList);
+			//System.out.println(campgroundList.toString());
 		}
 //		 else if (choice.equals(CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS)) {
 //			System.out.println("Search for Campground Reservation");
