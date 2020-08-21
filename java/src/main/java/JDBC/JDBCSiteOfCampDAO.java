@@ -2,11 +2,14 @@ package JDBC;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import com.techelevator.SiteOfCamp;
 import com.techelevator.SiteOfCampDAO;
@@ -37,6 +40,33 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 		
 	
 	public List<SiteOfCamp> getAvailableSitesByCampgroundId(int campgroundId, LocalDate fromDate, LocalDate toDate) {
+		
+		String arrival = "";
+		String departure = "";
+		
+		int arrivalYear = Integer.parseInt(arrival.substring(0,4));
+		int arrivalMon = Integer.parseInt(arrival.substring(5,7));
+		int arrivalDay = Integer.parseInt(arrival.substring(8));
+	
+		int depYear = Integer.parseInt(departure.substring(0,4));
+		int depMon = Integer.parseInt(departure.substring(5,7));
+		int depDay = Integer.parseInt(departure.substring(8));
+		
+		
+		
+		Set <LocalDate> dates = new HashSet<LocalDate>();
+		dates.add(LocalDate.of(arrivalYear, arrivalMon, arrivalDay));
+		dates.add(LocalDate.of(depYear, depMon, depDay));
+		
+	    Set <Long> anId =  new HashSet<Long>();
+	    anId.add(1L);
+	    
+	    MapSqlParameterSource parameters = new MapSqlParameterSource();
+	    parameters.addValue("dates", dates);
+	    parameters.addValue("id", anId);
+	            
+	    String sqlSelect = "SELECT * FROM site WHERE campground_id = :id AND site_id "
+	            + "NOT IN (SELECT site_id FROM reservation WHERE (from_date, to_date) OVERLAPS ( :dates ) )";
 
 		List<SiteOfCamp> availableSites = new ArrayList<SiteOfCamp>();
 		String sqlAvailableSites = "SELECT * FROM site JOIN campground on site.campground_id = campground.campground_id "
