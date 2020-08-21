@@ -72,21 +72,22 @@ public class CampgroundCLI {
 		ArrayList <String> parkArrayList = new ArrayList<>();
 		for (Park park : parkDAO.getAllParks()) {
 			parkArrayList.add(park.getName());
-			System.out.println(parkArrayList);
 		}
-		//selectedCampgroundId = (Integer)menu.getChoiceFromOptions(parkArrayList.toArray());
-		selectedCampGround = (String)menu.getChoiceFromOptions(parkArrayList.toArray()); 
-		System.out.println(selectedCampGround);
-		System.out.println(selectedCampGround);
-		System.out.println(selectedCampGround);
-		String data =  selectedCampGround;
-		System.out.println(data);
+
+		String selectedPark = (String)menu.getChoiceFromOptions(parkArrayList.toArray()); 
+		int parkId = parkDAO.getParkId(selectedPark);
+			
+		List<Campground> campgrounds = campgroundDAO.getCampgroundByParkId(parkId);
+//		
+	//	System.out.println(campgrounds);
 		
-		selectedCampgroundId = campgroundDAO.getparkIdByParkname(data);
-		System.out.println(selectedCampgroundId);
-		//System.out.println(selectedCampgroundId);
-		//Long selectedCampgroundId = selectedCampGround.
-		campMenu();
+		selectedCampGround = (String)menu.getChoiceFromOptions(campgrounds.toArray()); 
+		
+//		//selectedCampgroundId = campgroundDAO.getparkIdByParkname(data);
+//		System.out.println(selectedCampgroundId);
+//		//System.out.println(selectedCampgroundId);
+//		//Long selectedCampgroundId = selectedCampGround.
+//		campMenu();
 	}
 	
 	private void campMenu() {
@@ -96,10 +97,14 @@ public class CampgroundCLI {
 			System.out.println(CAMP_MENU_OPTION_ALL_CAMPGROUNDS);
 			ArrayList <String> campgroundList = new ArrayList<>();
 			System.out.println(selectedCampgroundId);
-			
 			for (Campground campground : campgroundDAO.getCampgroundByParkId(1)) {
 				campgroundList.add(campground.getName());
 				System.out.println(campground.getName() );
+				
+			//for (Campground campground : campsOfParkId) {
+					String price = "$" + campground.getMoneyFee();
+					System.out.println("" + campground.getName().toString() + price);
+					
 				
 			}
 			selectedCampGround = (String)menu.getChoiceFromOptions(campgroundList.toArray()); 
@@ -127,6 +132,14 @@ public class CampgroundCLI {
 //			parks();
 //		}
 //	}
+	
+	
+	
+	private List<String> stringBreak(String description, int i) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
 
 	private void reservations() {
 		System.out.println("Select a Command");
