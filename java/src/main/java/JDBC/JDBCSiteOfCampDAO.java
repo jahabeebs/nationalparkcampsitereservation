@@ -70,10 +70,10 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 
 		List<SiteOfCamp> availableSites = new ArrayList<SiteOfCamp>();
 		//dates for postgresql must be formatted 'YEAR-MONTH-DAY' like '2020-09-29'
-		String sqlAvailableSites = "SELECT * FROM site JOIN campground on site.campground_id = campground.campground_id "
-				+ "WHERE site.campground_id = ? " + "and site_id NOT IN " + "(SELECT site.site_id FROM site "
-				+ "JOIN reservation ON reservation.site_id = site.site_id "
-				+ "WHERE ? > reservation.from_date and ? < reservation.to_date) ";
+
+		String sqlAvailableSites =	"select site_number, max_occupancy, accessible, max_rv_length, utilities, daily_fee from site" +
+		"join campground on site.campground_id = campground.campground_id where site.campground_id = ? and site_id not in " + 
+	    "(select site_id from reservation where (?, ?) overlaps (from_date, to_date) group by site_id) limit 5";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlAvailableSites, parameters);
 
 		while (results.next()) {
