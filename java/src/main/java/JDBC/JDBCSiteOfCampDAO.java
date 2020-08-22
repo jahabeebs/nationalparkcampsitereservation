@@ -58,16 +58,17 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 		dates.add(LocalDate.of(arrivalYear, arrivalMon, arrivalDay));
 		dates.add(LocalDate.of(depYear, depMon, depDay));
 		
-	    Set <Long> anId =  new HashSet<Long>();
-	    anId.add(1L);
+//	    Set <Long> anId =  new HashSet<Long>();
+//	    anId.add(1L);
 	    
 	    MapSqlParameterSource parameters = new MapSqlParameterSource();
 	    parameters.addValue("dates", dates);
-	    parameters.addValue("id", anId);
+//	    parameters.addValue("id", anId);
 	            
 	    String sqlSelect = "SELECT * FROM site WHERE campground_id = :id AND site_id "
 	            + "NOT IN (SELECT site_id FROM reservation WHERE (from_date, to_date) OVERLAPS ( :dates ) )";
 
+//	    String sqlSelect = "SELECT site.*, camp.* FROM site JOIN campground camp ON camp.campground_id = site.campground_id WHERE site.site_id NOT IN (SELECT site_id FROM reservation WHERE ? <= to_date AND ? >= from_date)";
 		List<SiteOfCamp> availableSites = new ArrayList<SiteOfCamp>();
 		//dates for postgresql must be formatted 'YEAR-MONTH-DAY' like '2020-09-29'
 
@@ -76,11 +77,11 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 	    "(select site_id from reservation where (?, ?) overlaps (from_date, to_date) group by site_id) limit 5";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlAvailableSites, parameters);
 
+	//	SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSelect, parameters);
 		while (results.next()) {
 			SiteOfCamp siteList = mapRowToSite(results);
 			availableSites.add(siteList);
 		}
-
 		return availableSites;
 	}
 
