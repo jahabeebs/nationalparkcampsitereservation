@@ -25,7 +25,6 @@ import JDBC.JDBCCampgroundDAO;
 import JDBC.JDBCParkDAO;
 import JDBC.JDBCReservationDAO;
 import JDBC.JDBCSiteOfCampDAO;
-import junk.tjyu.Campground;
 
 public class CampgroundCLI {
 
@@ -216,6 +215,10 @@ public class CampgroundCLI {
 		String departureDate = userDeparture.nextLine();
 		departure = wrongDateFormat(departureDate);
 		
+//		List siteOfCampList = new ArrayList<SiteOfCamp>();
+//		siteOfCampList = JDBCSiteOfCampDAO.getAvailableSitesByCampgroundId(Integer.parseInt(userCamp), userArrival, userDeparture);
+		
+				
 		}
 
 LocalDate wrongDateFormat(String dateEnteredByUser) {
