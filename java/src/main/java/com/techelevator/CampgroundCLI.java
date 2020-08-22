@@ -1,29 +1,21 @@
 package com.techelevator;
 
 import java.io.PrintWriter;
-
 import java.math.BigDecimal;
 import java.text.DateFormatSymbols;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.dbcp2.BasicDataSource;
-
 import com.techelevator.view.Menu;
-
 import JDBC.JDBCCampgroundDAO;
-
 import JDBC.JDBCParkDAO;
 import JDBC.JDBCReservationDAO;
 import JDBC.JDBCSiteOfCampDAO;
@@ -226,6 +218,7 @@ public class CampgroundCLI {
 		Scanner userDeparture = new Scanner(System.in);
 		String departureDate = userArrival.nextLine();
 		departure = wrongDateFormat(departureDate);
+
 
 		System.out.print("What is your name or id? ");
 		Scanner nameInput = new Scanner(System.in);

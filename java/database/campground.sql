@@ -812,6 +812,3 @@ ALTER TABLE site ADD FOREIGN KEY (campground_id) REFERENCES campground(campgroun
 ALTER TABLE reservation ADD FOREIGN KEY (site_id) REFERENCES site(site_id);
 
 --- site.campground_id ---  WHERE ? > reservation.from_date and ? < reservation.to_date
-SELECT * FROM site JOIN campground on site.campground_id = campground.campground_id WHERE site.campground_id = 1 AND site_id NOT IN (select site.site_id from site JOIN reservation ON reservation.site_id = site.site_id WHERE '2020-08-19' > reservation.from_date and '2020-08-22' < reservation.to_date);
-
-SELECT * FROM site;

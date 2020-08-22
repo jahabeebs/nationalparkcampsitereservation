@@ -22,6 +22,5 @@ public class JDBCReservationDAO implements ReservationDAO {
 		LocalDate createDate = LocalDate.now();
 		String sqlAddReservation = "INSERT INTO reservation (site_id, name, from_date, to_date, create_date) VALUES (?,?,?,?,?)";
 		jdbcTemplate.update(sqlAddReservation, site_id, name, startDate, endDate, createDate);
-		
 	}
 }

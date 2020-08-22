@@ -69,6 +69,7 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 		List<SiteOfCamp> results = new ArrayList<SiteOfCamp>();
 		
 		Set <LocalDate> dates = new HashSet<LocalDate>();
+
 		dates.add(arrival);
 		dates.add(departure);
 	  
