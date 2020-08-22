@@ -42,6 +42,10 @@ public class CampgroundCLI {
 	private static final String CAMP_MENU_OPTION_ALL_CAMPGROUNDS = "View Campgrounds";
 	private static final String CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS = "Search for Reservation";
 	private static final String CAMP_MENU_BACK = "Back";
+	
+	private static final String[] SITE_MENU_OPTIONS = new String[] { CAMP_MENU_OPTION_ALL_CAMPGROUNDS,
+			CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS, CAMP_MENU_BACK };
+	
 	private static final String[] CAMP_MENU_OPTIONS = new String[] { CAMP_MENU_OPTION_ALL_CAMPGROUNDS,
 			CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS, CAMP_MENU_BACK };
 	private Menu menu;
@@ -199,7 +203,17 @@ public class CampgroundCLI {
 	}
 
 	private void handleMakeReservation() {
-		System.out.print("Select Campground (first option 1 etc.. >>> ");
+		
+		String choice = (String) menu.getChoiceFromOptions(RESERVATION_MENU_OPTIONS);
+		if (choice.equals(RESERVATION_MENU_SEARCH_AVAILABLE)) {
+			handleMakeReservation();
+		} else if (choice.equals(RES_BACK))
+			parks();
+		{
+			System.exit(0);
+
+		}
+		System.out.print("Select A site (first option 1 etc.. >>> ");
 		Scanner userCampground = new Scanner(System.in);
 		String userCamp = userCampground.nextLine();
 
@@ -212,9 +226,6 @@ public class CampgroundCLI {
 		Scanner userDeparture = new Scanner(System.in);
 		String departureDate = userArrival.nextLine();
 		departure = wrongDateFormat(departureDate);
-		
-//		List siteOfCampList = new ArrayList<SiteOfCamp>();
-//		siteOfCampList = JDBCSiteOfCampDAO.getAvailableSitesByCampgroundId(Integer.parseInt(userCamp), userArrival, userDeparture);
 
 		System.out.print("What is your name or id? ");
 		Scanner nameInput = new Scanner(System.in);
@@ -274,6 +285,8 @@ public class CampgroundCLI {
 
 	private void availableSites() {
 		System.out.println("Results Matching Your Search Dates");
+		
+		
 
 		availableSites = siteDAO.getAvailableSitesByCampgroundId(selectedCampgroundId, arrival, departure);
 		System.out.println(siteDAO.getAvailableSitesByCampgroundId(selectedCampgroundId, arrival, departure).size());
@@ -325,5 +338,7 @@ public class CampgroundCLI {
 		}
 		handleMakeReservation();
 	}
+	
+	
 
 }
