@@ -49,7 +49,7 @@ public class CampgroundCLI {
 	private Park selectedPark;
 
 	private int selectedCampgroundId;
-	private long selectedSiteId = 0;
+	private long selectedSiteId = 1;
 	private List<SiteOfCamp> availableSites = null;
 	private LocalDate arrival;
 	private LocalDate departure;
@@ -276,7 +276,7 @@ public class CampgroundCLI {
 		System.out.println("Results Matching Your Search Dates");
 
 		availableSites = siteDAO.getAvailableSitesByCampgroundId(selectedCampgroundId, arrival, departure);
-
+		System.out.println(siteDAO.getAvailableSitesByCampgroundId(selectedCampgroundId, arrival, departure).size());
 		BigDecimal days = new BigDecimal((int) ChronoUnit.DAYS.between(arrival, departure));
 		System.out.println("Site No.    Max Occup.       Accessible?       Max RV Length           Utility   Cost");
 		String trueOrFalse = "";

@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import com.techelevator.SiteOfCamp;
 import com.techelevator.SiteOfCampDAO;
@@ -17,9 +18,11 @@ import com.techelevator.SiteOfCampDAO;
 public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 	
 	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate jdbcSpecial;
 
 	public JDBCSiteOfCampDAO(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
+		this.jdbcSpecial = new NamedParameterJdbcTemplate(dataSource);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -38,50 +41,57 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 //	}
 	
 		
-	@Override
-	public List<SiteOfCamp> getAvailableSitesByCampgroundId(int campgroundId, LocalDate fromDate, LocalDate toDate) {
-		
-		String arrival = "";
-		String departure = "";
-		
-		int arrivalYear = Integer.parseInt(arrival.substring(0,4));
-		int arrivalMon = Integer.parseInt(arrival.substring(5,7));
-		int arrivalDay = Integer.parseInt(arrival.substring(8));
+//	@Override
+//	public void getAvailableSitesByCampgroundId(int campgroundId, LocalDate fromDate, LocalDate toDate) {
+//		
+//		String arrival = "";
+//		String departure = "";
+//		
+//		int arrivalYear = Integer.parseInt(arrival.substring(0,4));
+//		int arrivalMon = Integer.parseInt(arrival.substring(5,7));
+//		int arrivalDay = Integer.parseInt(arrival.substring(8));
+//	
+//		int depYear = Integer.parseInt(departure.substring(0,4));
+//		int depMon = Integer.parseInt(departure.substring(5,7));
+//		int depDay = Integer.parseInt(departure.substring(8))
+//	            
+//		
+//
+//		String sqlAvailableSites =	"select site_number, max_occupancy, accessible, max_rv_length, utilities, daily_fee from site" +
+//		"join campground on site.campground_id = campground.campground_id where site.campground_id = ? and site_id not in " + 
+//	    "(select site_id from reservation where (?, ?) overlaps (from_date, to_date) group by site_id) limit 5";
+//		return;
+//	}
 	
-		int depYear = Integer.parseInt(departure.substring(0,4));
-		int depMon = Integer.parseInt(departure.substring(5,7));
-		int depDay = Integer.parseInt(departure.substring(8));
+	@Override
+	public List<SiteOfCamp> sitesByDate(LocalDate arrival, LocalDate departure, Long id) {
 		
-		
+		List<SiteOfCamp> results = new ArrayList<SiteOfCamp>();
 		
 		Set <LocalDate> dates = new HashSet<LocalDate>();
-		dates.add(LocalDate.of(arrivalYear, arrivalMon, arrivalDay));
-		dates.add(LocalDate.of(depYear, depMon, depDay));
-		
-	    Set <Long> anId =  new HashSet<Long>();
+		dates.add(arrival);
+		dates.add(departure);
+	  
+		Set <Long> anId =  new HashSet<Long>();
 	    anId.add(1L);
 	    
 	    MapSqlParameterSource parameters = new MapSqlParameterSource();
 	    parameters.addValue("dates", dates);
 	    parameters.addValue("id", anId);
-	            
-	    String sqlSelect = "SELECT * FROM site WHERE campground_id = :id AND site_id "
+	    
+	    String sql = "SELECT * FROM site WHERE campground_id = :id AND site_id "
 	            + "NOT IN (SELECT site_id FROM reservation WHERE (from_date, to_date) OVERLAPS ( :dates ) )";
-
-		List<SiteOfCamp> availableSites = new ArrayList<SiteOfCamp>();
-
-		String sqlAvailableSites =	"select site_number, max_occupancy, accessible, max_rv_length, utilities, daily_fee from site" +
-		"join campground on site.campground_id = campground.campground_id where site.campground_id = ? and site_id not in " + 
-	    "(select site_id from reservation where (?, ?) overlaps (from_date, to_date) group by site_id) limit 5";
-		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlAvailableSites, parameters);
-
-		while (results.next()) {
-			SiteOfCamp siteList = mapRowToSite(results);
-			availableSites.add(siteList);
+	    
+	    SqlRowSet rowset = jdbcSpecial.queryForRowSet(sql, parameters);
+	    
+		while (rowset.next()) {
+			SiteOfCamp siteList = mapRowToSite(rowset);
+			results.add(siteList);
 		}
-
-		return availableSites;
+	    return results;
 	}
+	
+	
 
 	private SiteOfCamp mapRowToSite(SqlRowSet results) {
 		SiteOfCamp campSite = new SiteOfCamp();
@@ -96,6 +106,12 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 
 		return campSite;
 
+	}
+
+	@Override
+	public List<SiteOfCamp> getAvailableSitesByCampgroundId(int campgroundId, LocalDate fromDate, LocalDate toDate) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
