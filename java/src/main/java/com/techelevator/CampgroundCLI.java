@@ -25,6 +25,7 @@ import JDBC.JDBCCampgroundDAO;
 import JDBC.JDBCParkDAO;
 import JDBC.JDBCReservationDAO;
 import JDBC.JDBCSiteOfCampDAO;
+import junk.tjyu.Campground;
 
 public class CampgroundCLI {
 
@@ -134,11 +135,14 @@ public class CampgroundCLI {
 		String selectedPark = (String) menu.getChoiceFromOptions(parkArrayList.toArray());
 		int parkId = parkDAO.getParkId(selectedPark);
 		List<List<String>> rows = new ArrayList<>();
-		List<String> headers = Arrays.asList("Campground      ", "Open Month  ", "Close Month  ", "Fee  ");
+		List<String> headers = Arrays.asList("Campground      ", "Open Month  ", "Close Month  ", "Fee  ", "option");
 		rows.add(headers);
 
 		for (Campground camp : campgroundDAO.getCampgroundByParkId(parkId)) {
-
+		
+	
+			int optionNum = 0; 
+			String optionString = String.valueOf(optionNum);
 			String campsite = camp.getName();
 			double openDate = camp.getOpenFromMM();
 			double closeDate = camp.getOpenToMM();
@@ -149,10 +153,12 @@ public class CampgroundCLI {
 
 			System.out.println("");
 
-			rows.add(Arrays.asList(campsite, openMonth, closeMonth, "$" + fee));
+			rows.add(Arrays.asList(campsite, openMonth, closeMonth, "$" + fee, optionString));
 
 		}
 		System.out.println(formatAsTable(rows));
+
+
 
 		List<Campground> campgrounds = campgroundDAO.getCampgroundByParkId(parkId);
 
@@ -163,11 +169,8 @@ public class CampgroundCLI {
 			parks();
 		{
 			System.exit(0);
+			
 		}
-
-		// String selectedCampGround = (String)
-		// menu.getChoiceFromOptions(campgrounds.toArray());
-		// System.out.println(selectedCampGround);
 
 	}
 
@@ -192,72 +195,74 @@ public class CampgroundCLI {
 		return result.toString();
 	}
 
-	private LocalDate getArrivalDateUserInput() {
-		LocalDate date = null;
-		System.out.print("What is the arrival date? (YYYY/MM/DD/)");
-		String userInput = input.nextLine();
-		try {
-			date = LocalDate.parse(userInput, dateTimeFormat);
-		} catch (DateTimeParseException e) {
-			output.println(userInput + " is not a valid option ***");
-		}
-		return date;
-	}
-
-	private LocalDate getDepartureDateUserInput() {
-		LocalDate date = null;
-		output.print("What is the departure date? (YYYY/MM/DD) ");
-		output.flush();
-		String userInput = input.nextLine();
-		try {
-			date = LocalDate.parse(userInput, dateTimeFormat);
-		} catch (DateTimeParseException e) {
-			output.println(userInput + " is not a valid option ***");
-		}
-		return date;
-	}
-
 	public String getMonth(double month) {
 		return new DateFormatSymbols().getMonths()[(int) (month - 1)];
 	}
 
 	private void handleMakeReservation() {
+		System.out.print("Select Campground  >>> ");
+		Scanner userCampground = new Scanner(System.in);
+		String userCamp = userCampground.nextLine();
+	
 		
-		 Scanner myObj = new Scanner(System.in);  // Create a Scanner object
-		    System.out.println("What year will you be booking?");
-		    try
-		    {
-		    String userYear = myObj.nextLine();
-		    int userYearNum = Integer.parseInt(userYear);
-		    int currentYear = Year.now().getValue();
+		System.out.print("What is the arrival date? (YYYY/MM/DD)");
+		Scanner userArrival = new Scanner(System.in);
+		String arrivalDate = userArrival.nextLine();
+		arrival = wrongDateFormat(arrivalDate);
+		
 
-		    if(userYearNum < currentYear ) {
-		    	System.out.print("We hope to add space and timetravel in the future");
-				parks();
-		    }
-		    else if (userYearNum > currentYear + 10 ) {
-		    	System.out.print("We cannot make reservations for futher then 10 years... the park make not exist");
-		    	parks();
-		    }
-		    else {
-		    	System.out.print("great");
-		    }
-		    }
-		    catch(NumberFormatException ex) {
-		    	System.out.print("That is not a year");
-		    }
-			System.out.print("");
-			System.out.print("");
+		System.out.print("What is the departure date? (YYYY/MM/DD)");
+		Scanner userDeparture = new Scanner(System.in);
+		String departureDate = userDeparture.nextLine();
+		departure = wrongDateFormat(departureDate);
 		
-		System.out.print("\nWhich site should be reserved (enter 0 to cancel)? >>> ");
-		//getArrivalDateUserInput();
+		}
+
+LocalDate wrongDateFormat(String dateEnteredByUser) {
+	LocalDate resultDate = null;
+	
+	if (dateEnteredByUser.length() != 10) {
+		System.out.println("Invalid date format, please try again!");
+		handleMakeReservation();
+	} else {
+		String[] dateArray = dateEnteredByUser.split("/");
 		
-		System.out.print("What name should the reservation be made under? >>> ");
-		//getDepartureDateUserInput();
+		for (String s : dateArray) {
+			try {
+				Integer.parseInt(s);
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid date format, please try again.");
+				handleMakeReservation();
+			}
+		}
+		if (dateArray.length != 3) {
+			System.out.println("Invalid date format, please try again.");
+			handleMakeReservation();
+		}
+		int Year = Integer.parseInt(dateArray[0]);
+		int Month = Integer.parseInt(dateArray[1]);
+		int Day = Integer.parseInt(dateArray[2]);
 		
-	//	long customerReservationId = reservationDAO.makeReservation(numChoice, selectedCampGround, startDate, endDate);
-		
-	//	System.out.println("\nThe reservation has been made and the confirmation id is: " + customerReservationId + "\n\n");
-		run();
+		if (Month < 1 || Month > 12) {
+			System.out.println("Invalid Month, please try again.");
+			handleMakeReservation();
+		}
+		if (Day < 1 || Day > 31) {
+			System.out.println("Invalid Day, please try again.");
+			handleMakeReservation();
+		}
+		if (Day > 30 && (Month == 2 || Month == 4 || Month == 6 || Month == 9 || Month == 11)) {
+			System.out.println("Invalid Day, please try again.");
+			handleMakeReservation();
+		} else if (Day > 28 && (Month == 2)) {
+			System.out.println("We are closed on leap days");
+			handleMakeReservation();
+		}
+		resultDate = LocalDate.of(Year, Month, Day);
 	}
+		return resultDate;
 }
+	
+}	
+	
+
