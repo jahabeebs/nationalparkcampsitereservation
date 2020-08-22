@@ -23,19 +23,19 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public List<SiteOfCamp> getSitesByCampgroundId(int campgroundId) {
-		List<SiteOfCamp> sitesList = new ArrayList<SiteOfCamp>();
-		String sqlSitesbyId = "SELECT * FROM site JOIN campground on site.campground_id = campground.campground_id "
-				+ "WHERE site.campground_id = ? ";
-		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSitesbyId, campgroundId);
-		while (results.next()) {
-			SiteOfCamp siteList = mapRowToSite(results);
-			sitesList.add(siteList);
-		}
-		// TODO Auto-generated method stub
-		return sitesList;
-	}
+//	@Override
+//	public List<SiteOfCamp> getSitesByCampgroundId(int campgroundId) {
+//		List<SiteOfCamp> sitesList = new ArrayList<SiteOfCamp>();
+//		String sqlSitesbyId = "SELECT * FROM site JOIN campground on site.campground_id = campground.campground_id"
+//				+ "WHERE site.campground_id = ? ";
+//		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlSitesbyId, campgroundId);
+//		while (results.next()) {
+//			SiteOfCamp siteList = mapRowToSite(results);
+//			sitesList.add(siteList);
+//		}
+//		// TODO Auto-generated method stub
+//		return sitesList;
+//	}
 	
 		
 	@Override
@@ -69,12 +69,12 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 	            + "NOT IN (SELECT site_id FROM reservation WHERE (from_date, to_date) OVERLAPS ( :dates ) )";
 
 		List<SiteOfCamp> availableSites = new ArrayList<SiteOfCamp>();
+		//dates for postgresql must be formatted 'YEAR-MONTH-DAY' like '2020-09-29'
 		String sqlAvailableSites = "SELECT * FROM site JOIN campground on site.campground_id = campground.campground_id "
-				+ "WHERE site.campground_id = ? " + "and site_id NOT IN " + "(select site.site_id from site "
+				+ "WHERE site.campground_id = ? " + "and site_id NOT IN " + "(SELECT site.site_id FROM site "
 				+ "JOIN reservation ON reservation.site_id = site.site_id "
 				+ "WHERE ? > reservation.from_date and ? < reservation.to_date) ";
-		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlAvailableSites, campgroundId, fromDate, toDate, toDate,
-				fromDate);
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlAvailableSites, parameters);
 
 		while (results.next()) {
 			SiteOfCamp siteList = mapRowToSite(results);
