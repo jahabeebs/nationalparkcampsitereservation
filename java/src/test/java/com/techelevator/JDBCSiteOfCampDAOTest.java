@@ -23,8 +23,3 @@ public class JDBCSiteOfCampDAOTest extends DAOIntegrationTest {
 		assertEquals(campsiteTestList.toString(), site.getAvailableSitesByCampgroundId(4, LocalDate.of(2020, 8, 01), LocalDate.of(2020,  8, 10)).toString());
 	}
 }
-	
-//	@Test
-//	public void testGetSitesByCampgroundId() {
-//	}
-//
