@@ -217,9 +217,9 @@ public class CampgroundCLI {
 		Scanner nameInput = new Scanner(System.in);
 		String name = userDeparture.nextLine();
 
-		long customerReservationId = reservationDAO.makeReservation(selectedSiteId, name, arrival, departure);
+		reservationDAO.makeReservation(selectedSiteId, name, arrival, departure);
 
-		System.out.println("The reservation is under: " + customerReservationId);
+		System.out.println("The reservation is under: " );
 		
 		availableSites();
 	}

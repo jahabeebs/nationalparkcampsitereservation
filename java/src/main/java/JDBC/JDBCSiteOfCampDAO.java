@@ -69,7 +69,6 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 	            + "NOT IN (SELECT site_id FROM reservation WHERE (from_date, to_date) OVERLAPS ( :dates ) )";
 
 		List<SiteOfCamp> availableSites = new ArrayList<SiteOfCamp>();
-		//dates for postgresql must be formatted 'YEAR-MONTH-DAY' like '2020-09-29'
 
 		String sqlAvailableSites =	"select site_number, max_occupancy, accessible, max_rv_length, utilities, daily_fee from site" +
 		"join campground on site.campground_id = campground.campground_id where site.campground_id = ? and site_id not in " + 
