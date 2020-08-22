@@ -1,6 +1,7 @@
 package com.techelevator;
 
 import java.io.PrintWriter;
+
 import java.math.BigDecimal;
 import java.text.DateFormatSymbols;
 import java.text.Format;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +48,7 @@ public class CampgroundCLI {
 	private String selectedCampGround = "";
 	private Park selectedPark;
 
-	private List<Campground> selectedCampgroundId;
+	private int selectedCampgroundId;
 	private long selectedSiteId = 0;
 	private List<SiteOfCamp> availableSites = null;
 	private LocalDate arrival;
@@ -56,6 +58,7 @@ public class CampgroundCLI {
 	private SiteOfCampDAO siteDAO;
 	private ParkDAO parkDAO;
 	private long numChoice;
+	private SiteOfCamp site;
 	private Campground campground;
 	private PrintWriter output;
 	private Scanner input;
@@ -138,9 +141,8 @@ public class CampgroundCLI {
 		rows.add(headers);
 
 		for (Campground camp : campgroundDAO.getCampgroundByParkId(parkId)) {
-		
-	
-			int optionNum = 0; 
+
+			int optionNum = 0;
 			String optionString = String.valueOf(optionNum);
 			String campsite = camp.getName();
 			double openDate = camp.getOpenFromMM();
@@ -157,8 +159,6 @@ public class CampgroundCLI {
 		}
 		System.out.println(formatAsTable(rows));
 
-
-
 		List<Campground> campgrounds = campgroundDAO.getCampgroundByParkId(parkId);
 
 		String choice = (String) menu.getChoiceFromOptions(RESERVATION_MENU_OPTIONS);
@@ -168,7 +168,7 @@ public class CampgroundCLI {
 			parks();
 		{
 			System.exit(0);
-			
+
 		}
 
 	}
@@ -199,73 +199,131 @@ public class CampgroundCLI {
 	}
 
 	private void handleMakeReservation() {
-		System.out.print("Select Campground  >>> ");
+		System.out.print("Select Campground (first option 1 etc.. >>> ");
 		Scanner userCampground = new Scanner(System.in);
 		String userCamp = userCampground.nextLine();
-	
-		
+
 		System.out.print("What is the arrival date? (YYYY/MM/DD)");
 		Scanner userArrival = new Scanner(System.in);
 		String arrivalDate = userArrival.nextLine();
 		arrival = wrongDateFormat(arrivalDate);
-		
 
 		System.out.print("What is the departure date? (YYYY/MM/DD)");
 		Scanner userDeparture = new Scanner(System.in);
-		String departureDate = userDeparture.nextLine();
+		String departureDate = userArrival.nextLine();
 		departure = wrongDateFormat(departureDate);
 		
 //		List siteOfCampList = new ArrayList<SiteOfCamp>();
 //		siteOfCampList = JDBCSiteOfCampDAO.getAvailableSitesByCampgroundId(Integer.parseInt(userCamp), userArrival, userDeparture);
-		
-				
-		}
 
-LocalDate wrongDateFormat(String dateEnteredByUser) {
-	LocalDate resultDate = null;
-	
-	if (dateEnteredByUser.length() != 10) {
-		System.out.println("Invalid date format, please try again!");
-		handleMakeReservation();
-	} else {
-		String[] dateArray = dateEnteredByUser.split("/");
+		System.out.print("What is your name or id? ");
+		Scanner nameInput = new Scanner(System.in);
+		String name = userDeparture.nextLine();
+
+		long customerReservationId = reservationDAO.makeReservation(selectedSiteId, name, arrival, departure);
+
+		System.out.println("The reservation is under: " + customerReservationId);
 		
-		for (String s : dateArray) {
-			try {
-				Integer.parseInt(s);
-			} catch (NumberFormatException e) {
+		availableSites();
+	}
+
+	LocalDate wrongDateFormat(String dateEnteredByUser) {
+		LocalDate resultDate = null;
+
+		if (dateEnteredByUser.length() != 10) {
+			System.out.println("Invalid date format, please try again.");
+			handleMakeReservation();
+		} else {
+			String[] dateArray = dateEnteredByUser.split("/");
+
+			for (String s : dateArray) {
+				try {
+					Integer.parseInt(s);
+				} catch (NumberFormatException e) {
+					System.out.println("Invalid date format, please try again.");
+					handleMakeReservation();
+				}
+			}
+			if (dateArray.length != 3) {
 				System.out.println("Invalid date format, please try again.");
 				handleMakeReservation();
 			}
-		}
-		if (dateArray.length != 3) {
-			System.out.println("Invalid date format, please try again.");
-			handleMakeReservation();
-		}
-		int Year = Integer.parseInt(dateArray[0]);
-		int Month = Integer.parseInt(dateArray[1]);
-		int Day = Integer.parseInt(dateArray[2]);
-		
-		if (Month < 1 || Month > 12) {
-			System.out.println("Invalid Month, please try again.");
-			handleMakeReservation();
-		}
-		if (Day < 1 || Day > 31) {
-			System.out.println("Invalid Day, please try again.");
-			handleMakeReservation();
-		}
-		if (Day > 30 && (Month == 2 || Month == 4 || Month == 6 || Month == 9 || Month == 11)) {
-			System.out.println("Invalid Day, please try again.");
-			handleMakeReservation();
-		} else if (Day > 28 && (Month == 2)) {
-			System.out.println("We are closed on leap days");
-			handleMakeReservation();
-		}
-		resultDate = LocalDate.of(Year, Month, Day);
-	}
-		return resultDate;
-}
-	
-}	
-	
+			int Year = Integer.parseInt(dateArray[0]);
+			int Month = Integer.parseInt(dateArray[1]);
+			int Day = Integer.parseInt(dateArray[2]);
 
+			if (Month < 1 || Month > 12) {
+				System.out.println("Invalid Month, please try again.");
+				handleMakeReservation();
+			}
+			if (Day < 1 || Day > 31) {
+				System.out.println("Invalid Day, please try again.");
+				handleMakeReservation();
+			}
+			if (Day > 30 && (Month == 2 || Month == 4 || Month == 6 || Month == 9 || Month == 11)) {
+				System.out.println("Invalid Day, please try again.");
+				handleMakeReservation();
+			} else if (Day > 28 && (Month == 2)) {
+				System.out.println("We are closed on leap days");
+				handleMakeReservation();
+			}
+			resultDate = LocalDate.of(Year, Month, Day);
+		}
+		return resultDate;
+	}
+
+	private void availableSites() {
+		System.out.println("Results Matching Your Search Dates");
+
+		availableSites = siteDAO.getAvailableSitesByCampgroundId(selectedCampgroundId, arrival, departure);
+
+		BigDecimal days = new BigDecimal((int) ChronoUnit.DAYS.between(arrival, departure));
+		System.out.println("Site No.    Max Occup.       Accessible?       Max RV Length           Utility   Cost");
+		String trueOrFalse = "";
+		String rvLength = "";
+		String utility = "";
+		String sumCost = "";
+		int count = 1;
+
+		for (SiteOfCamp site : availableSites) {
+			BigDecimal sumFee = campground.getMoneyFee().multiply(days);
+			if (site.isAccessible()) {
+				trueOrFalse = "Yes";
+			} else {
+				trueOrFalse = "No";
+			}
+
+			if (site.getMaxRvLength() == 0) {
+				rvLength = "N/A";
+			} else {
+				rvLength = Integer.toString(site.getMaxRvLength());
+			}
+			if (site.isHasUtilities()) {
+				utility = "Yes";
+			} else {
+				utility = "N/A";
+			}
+			sumCost = "$" + Double.toString(sumFee.doubleValue()) + "0";
+
+			System.out.println(String.format("", count++, site.getMaxOccupancy(),
+					trueOrFalse, rvLength, utility, sumCost));
+		}
+		if (availableSites.size() == 0) {
+			System.out.println("There are no available sites for the specified date range.");
+			System.out.println("Would you like to enter an alternate date range? (Y)/(N)");
+			Scanner yesOrNo = new Scanner(System.in);
+			String noOrYes = yesOrNo.nextLine();
+			if (noOrYes.toUpperCase().equals("Y")) {
+				handleMakeReservation();
+			} else if (noOrYes.toUpperCase().equals("N")) {
+				System.out.println("Returning to Park Menu");
+				parks();
+			} else {
+				System.out.println("Invalid entry, please try again.\n");
+				availableSites();
+			}
+		}
+		handleMakeReservation();
+	}
+
+}
