@@ -212,6 +212,9 @@ public class CampgroundCLI {
 		Scanner userDeparture = new Scanner(System.in);
 		String departureDate = userArrival.nextLine();
 		departure = wrongDateFormat(departureDate);
+		
+//		List siteOfCampList = new ArrayList<SiteOfCamp>();
+//		siteOfCampList = JDBCSiteOfCampDAO.getAvailableSitesByCampgroundId(Integer.parseInt(userCamp), userArrival, userDeparture);
 
 		System.out.print("What is your name or id? ");
 		Scanner nameInput = new Scanner(System.in);
