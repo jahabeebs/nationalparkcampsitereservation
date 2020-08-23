@@ -7,6 +7,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +28,7 @@ public class CampgroundCLI {
 	private static final String MAIN_MENU_OPTIONS_LIST = "View Parks to find Campgrounds to make a Reservation";
 	private static final String MAIN_MENU_EXIT = "Exit";
 	private static final String MAIN_MENU_OPTIONS_SEARCH_FOR_RES = "Search for a Reservation";
-	private static final String[] MAIN_MENU_OPTIONS = new String[] { MAIN_MENU_OPTIONS_LIST, MAIN_MENU_EXIT, MAIN_MENU_OPTIONS_SEARCH_FOR_RES };
+	private static final String[] MAIN_MENU_OPTIONS = new String[] { MAIN_MENU_OPTIONS_LIST, MAIN_MENU_OPTIONS_SEARCH_FOR_RES, MAIN_MENU_EXIT };
 	private static final String PARK_MENU_DISPLAY_PARKS = "Select a Park";
 	private static final String[] PARK_MENU_OPTIONS = new String[] { PARK_MENU_DISPLAY_PARKS };
 	private static final String RES_BACK = "Back";
@@ -58,7 +59,7 @@ public class CampgroundCLI {
 	private Long campgroundLong = (long)0;
 	Scanner userInput = new Scanner(System.in);
 	private int parkId = 0;
-	private JDBCReservationDAO jdbcReservationDAO;
+	
 
 	public static void main(String[] args) {
 		BasicDataSource dataSource = new BasicDataSource();
@@ -355,14 +356,30 @@ public class CampgroundCLI {
 	public void retrieveReservation() {
 
 		System.out.println("What is your reservationid?");
-		Scanner scanner = new Scanner(System.in);
-		String userInput = scanner.nextLine();
-		long numInput = Long.parseLong(userInput);
-
-		Reservation reservationc = jdbcReservationDAO.getReservationbyID(numInput);
-
-		System.out.println(reservationc.getName());
-
+		System.out.println("");
+		String userInput1 = userInput.nextLine();
+		long numInput = Long.parseLong(userInput1);
+		Reservation reservation = reservationDAO.getReservationbyID(numInput);
+		LocalDate fromDate = reservation.getFromDate();
+		LocalDate toDate = reservation.getToDate();
+		LocalDate madeDate = reservation.getMakeDate();
+		long resIdnum = reservation.getSiteId();
+		String resId = String.valueOf(resIdnum); 
+		String madeDate1 = madeDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+		String fromDate1 = fromDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+		String toDate1 = toDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+		System.out.println(reservation);
+		System.out.println(reservation.getName());
+		System.out.println("Park ID: " + resId);
+		System.out.println("From:");
+		System.out.println(toDate1);
+		System.out.println("To:");
+		System.out.println(fromDate1);
+		
+		
+		
+		
+		
 		}
 
 	
