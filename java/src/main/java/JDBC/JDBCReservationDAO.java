@@ -1,13 +1,8 @@
 package JDBC;
 
 import java.time.LocalDate;
-
 import javax.sql.DataSource;
-
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
-
-import com.techelevator.Reservation;
 import com.techelevator.ReservationDAO;
 
 public class JDBCReservationDAO implements ReservationDAO {

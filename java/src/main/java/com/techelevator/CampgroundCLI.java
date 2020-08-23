@@ -41,9 +41,6 @@ public class CampgroundCLI {
 	private static final String[] CAMP_MENU_OPTIONS = new String[] { CAMP_MENU_OPTION_ALL_CAMPGROUNDS,
 			CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS, CAMP_MENU_BACK };
 	private Menu menu;
-	private String selectedCampGround = "";
-	private Park selectedPark;
-
 	private int selectedCampgroundId;
 	private long selectedSiteId = 1;
 	private List<SiteOfCamp> availableSites = null;
@@ -53,12 +50,8 @@ public class CampgroundCLI {
 	private CampgroundDAO campgroundDAO;
 	private SiteOfCampDAO siteDAO;
 	private ParkDAO parkDAO;
-	private long numChoice;
-	private SiteOfCamp site;
 	private Campground campground;
-	private PrintWriter output;
-	private Scanner input;
-	private DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy/MM/dd/");
+
 
 	public static void main(String[] args) {
 		BasicDataSource dataSource = new BasicDataSource();

@@ -30,19 +30,18 @@ public class JDBCParkDAO implements ParkDAO {
 		}
 		return ParkList;
 	}
-	
+
 	@Override
 	public int getParkId(String parkName) {
-		// TODO Auto-generated method stub
-		
+
 		String sql = "SELECT park_id FROM park WHERE name = ?";
 		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, parkName);
 		int parkId = -1;
-		
+
 		if (result.next()) {
 			parkId = result.getInt("park_id");
 		}
-		
+
 		return parkId;
 	}
 
@@ -57,6 +56,5 @@ public class JDBCParkDAO implements ParkDAO {
 		park.setDescription(parkResults.getString("description"));
 		return park;
 	}
-
 
 }
