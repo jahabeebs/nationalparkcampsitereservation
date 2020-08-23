@@ -44,7 +44,7 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 	    parameters.addValue("id", anId);
 	    
 	    String sql = "SELECT * FROM site WHERE campground_id = :id AND site_id "
-	            + "NOT IN (SELECT site_id FROM reservation WHERE (from_date, to_date) OVERLAPS ( :dates ) )";
+	            + "NOT IN (SELECT site_id FROM reservation WHERE (from_date, to_date) OVERLAPS ( :dates ) ) LIMIT 5";
 	    
 	    SqlRowSet rowset = jdbcSpecial.queryForRowSet(sql, parameters);
 	    
@@ -72,6 +72,7 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 		return campSite;
 
 	}
+
 
 
 

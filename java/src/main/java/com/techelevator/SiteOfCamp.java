@@ -1,7 +1,5 @@
 package com.techelevator;
 
-import java.math.BigDecimal;
-
 public class SiteOfCamp {
 	
 	private String name;
