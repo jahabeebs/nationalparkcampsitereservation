@@ -274,10 +274,14 @@ public class CampgroundCLI {
 		
 		
 
-		availableSites = siteDAO.getAvailableSitesByCampgroundId(selectedCampgroundId, arrival, departure);
-		System.out.println(siteDAO.getAvailableSitesByCampgroundId(selectedCampgroundId, arrival, departure).size());
-		BigDecimal days = new BigDecimal((int) ChronoUnit.DAYS.between(arrival, departure));
+		availableSites = siteDAO.sitesByDate(arrival, departure, (long)selectedCampgroundId);
+		//System.out.println(siteDAO.getAvailableSitesByCampgroundId(selectedCampgroundId, arrival, departure).size());
+		BigDecimal days = new BigDecimal((int) ChronoUnit.DAYS.between(arrival, departure));	
 		System.out.println("Site No.    Max Occup.       Accessible?       Max RV Length           Utility   Cost");
+		StringBuilder result = new StringBuilder();
+		for (SiteOfCamp site : availableSites) {
+			System.out.println(site.getCampGroundId() + " " + site.getMaxOccupancy() + "\n");
+		}
 		String trueOrFalse = "";
 		String rvLength = "";
 		String utility = "";
