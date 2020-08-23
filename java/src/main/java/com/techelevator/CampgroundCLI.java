@@ -1,20 +1,14 @@
 package com.techelevator;
 
-import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.DateFormatSymbols;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
-
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import com.techelevator.view.Menu;
@@ -30,23 +24,14 @@ public class CampgroundCLI {
 	private static final String MAIN_MENU_OPTIONS_SEARCH_FOR_RES = "Search for a Reservation";
 	private static final String[] MAIN_MENU_OPTIONS = new String[] { MAIN_MENU_OPTIONS_LIST,
 			MAIN_MENU_OPTIONS_SEARCH_FOR_RES, MAIN_MENU_EXIT };
-	private static final String PARK_MENU_DISPLAY_PARKS = "Select a Park";
-	private static final String[] PARK_MENU_OPTIONS = new String[] { PARK_MENU_DISPLAY_PARKS };
 	private static final String RES_BACK = "Back";
 	private static final String RESERVATION_MENU_SEARCH_AVAILABLE = "Search Available Reservation";
 	private static final String[] RESERVATION_MENU_OPTIONS = new String[] { RESERVATION_MENU_SEARCH_AVAILABLE,
 			RES_BACK };
-	private static final String CAMP_MENU_OPTION_ALL_CAMPGROUNDS = "View Campgrounds";
-	private static final String CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS = "Search for Reservation";
 	private static final String CAMP_MENU_BACK = "Back";
 	private static final String CAMP_MENU_OPTION_PICK_SITE = "Continue to pick site";
-
 	private static final String[] SITE_MENU_OPTIONS = new String[] { CAMP_MENU_OPTION_PICK_SITE, CAMP_MENU_BACK };
-
-	private static final String[] CAMP_MENU_OPTIONS = new String[] { CAMP_MENU_OPTION_ALL_CAMPGROUNDS,
-			CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS, CAMP_MENU_BACK };
 	private Menu menu;
-	private int selectedCampgroundId;
 	private List<SiteOfCamp> availableSites = null;
 	private LocalDate arrival;
 	private LocalDate departure;
@@ -54,8 +39,6 @@ public class CampgroundCLI {
 	private CampgroundDAO campgroundDAO;
 	private SiteOfCampDAO siteDAO;
 	private ParkDAO parkDAO;
-	private Campground campground;
-	private SiteOfCamp campsite;
 	private Long campgroundLong = (long) 0;
 	Scanner userInput = new Scanner(System.in);
 	private int parkId = 0;
@@ -109,8 +92,6 @@ public class CampgroundCLI {
 		System.out.println("Select a Park at Bottom");
 		System.out.println("");
 
-		Format formatter = new SimpleDateFormat("yyyy-MM-dd");
-
 		for (Park park : parkDAO.getAllParks()) {
 
 			System.out.println(park.getName() + " National Park");
@@ -123,10 +104,8 @@ public class CampgroundCLI {
 			String str = park.getDescription();
 			String[] arrOfStr = str.split(".");
 			String[] items = str.split("\\s*\\.\\s*");
-			int indexItem = 1;
 			for (String item : items) {
 				System.out.println("" + item);
-				indexItem++;
 				for (String a : arrOfStr)
 					System.out.println(a);
 			}
@@ -163,9 +142,6 @@ public class CampgroundCLI {
 
 		}
 		System.out.println(formatAsTable(rows));
-
-		List<Campground> campgrounds = campgroundDAO.getCampgroundByParkId(parkId);
-
 		String choice = (String) menu.getChoiceFromOptions(RESERVATION_MENU_OPTIONS);
 		if (choice.equals(RESERVATION_MENU_SEARCH_AVAILABLE)) {
 			handleMakeReservation(parkId);
@@ -311,8 +287,6 @@ public class CampgroundCLI {
 		System.out.println("Results Matching Your Search Dates");
 
 		availableSites = siteDAO.sitesByDate(arrival, departure, campgroundLong);
-		BigDecimal days = new BigDecimal((int) ChronoUnit.DAYS.between(arrival, departure));
-		StringBuilder result = new StringBuilder();
 		System.out.printf("\n %-15s %-15s \t%-15s %-15s \t%-15s", "Site No.", "Max Occup.", "Accessible?", "RV Length",
 				"Utility");
 		String trueOrFalse = "";
@@ -347,7 +321,7 @@ public class CampgroundCLI {
 
 		}
 
-		if (isFalse = true) {
+		if (isFalse == true) {
 			reservationDAO.makeReservation(value1, userName, arrival, departure);
 			System.out.println("");
 
@@ -361,11 +335,6 @@ public class CampgroundCLI {
 
 			run();
 		}
-		String rvLength = "";
-		String utility = "";
-		String sumCost = "";
-		int count = 1;
-
 		if (availableSites.size() == 0) {
 			System.out.println("There are no available sites for the specified date range.");
 			System.out.println("Would you like to enter an alternate date range? (Y)/(N)");
@@ -379,6 +348,7 @@ public class CampgroundCLI {
 			} else {
 				System.out.println("Invalid entry, please try again.\n");
 				availableSites();
+				yesOrNo.close();
 			}
 		}
 		handleMakeReservation(parkId);
@@ -386,27 +356,43 @@ public class CampgroundCLI {
 
 	public void retrieveReservation() {
 
-		System.out.println("What is your reservationid?");
+		System.out.println("What is your reservation id #?");
 		System.out.println("");
 		String userInput1 = userInput.nextLine();
-		long numInput = Long.parseLong(userInput1);
-		Reservation reservation = reservationDAO.getReservationbyID(numInput);
-		LocalDate fromDate = reservation.getFromDate();
-		LocalDate toDate = reservation.getToDate();
-		LocalDate madeDate = reservation.getMakeDate();
-		long resIdnum = reservation.getSiteId();
-		String resId = String.valueOf(resIdnum);
-		String madeDate1 = madeDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
-		String fromDate1 = fromDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
-		String toDate1 = toDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+		long numInput = 0;
+		Reservation reservation = null;
+		String fromDate1 = "";
+		String toDate1 = "";
+		LocalDate fromDate = null;
+		LocalDate toDate = null;
+		String resId = "";
+		long resIdnum = 0;
+		while (reservation == null) {
+		try {
+			numInput = Long.parseLong(userInput1);
+			reservation = reservationDAO.getReservationbyID(numInput);
+			fromDate = reservation.getFromDate();
+			toDate = reservation.getToDate();
+			resIdnum = reservation.getSiteId();
+			resId = String.valueOf(resIdnum);
+			fromDate1 = fromDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+			toDate1 = toDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
+		} catch (NumberFormatException e) {
+			System.out.println("Oops, we couldn't find this id. Please try again!");
+			retrieveReservation();
+		  }
+		 catch (NullPointerException e) {
+			System.out.println("Oops, we couldn't find this id. Please try again!");
+			retrieveReservation();
+		  }
+		}
 		System.out.println(reservation);
 		System.out.println(reservation.getName());
 		System.out.println("Park ID: " + resId);
 		System.out.println("From:");
-		System.out.println(toDate1);
-		System.out.println("To:");
 		System.out.println(fromDate1);
-
+		System.out.println("To:");
+		System.out.println(toDate1);
 	}
 
 }
