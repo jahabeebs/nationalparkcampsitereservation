@@ -44,6 +44,8 @@ public class CampgroundCLI {
 	private int parkId = 0;
 	String userName;
 	private String selectedSite = "";
+	String resId = "";
+	
 
 	public static void main(String[] args) {
 		BasicDataSource dataSource = new BasicDataSource();
@@ -324,12 +326,13 @@ public class CampgroundCLI {
 		if (isFalse == true) {
 			reservationDAO.makeReservation(value1, userName, arrival, departure);
 			System.out.println("");
-
+			
 			System.out.flush();
 			System.out.println(
 					"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-
+			
 			System.out.println("The reservation is under: " + userName);
+			System.out.println("The reservation number is: " + resId);
 			System.out.println("Thank You for Booking");
 			System.out.println("\n\n\n");
 
@@ -365,7 +368,6 @@ public class CampgroundCLI {
 		String toDate1 = "";
 		LocalDate fromDate = null;
 		LocalDate toDate = null;
-		String resId = "";
 		long resIdnum = 0;
 		while (reservation == null) {
 		try {
