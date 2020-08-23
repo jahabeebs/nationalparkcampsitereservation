@@ -1,29 +1,21 @@
 package com.techelevator;
 
 import java.io.PrintWriter;
-
 import java.math.BigDecimal;
 import java.text.DateFormatSymbols;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.dbcp2.BasicDataSource;
-
 import com.techelevator.view.Menu;
-
 import JDBC.JDBCCampgroundDAO;
-
 import JDBC.JDBCParkDAO;
 import JDBC.JDBCReservationDAO;
 import JDBC.JDBCSiteOfCampDAO;
@@ -42,6 +34,10 @@ public class CampgroundCLI {
 	private static final String CAMP_MENU_OPTION_ALL_CAMPGROUNDS = "View Campgrounds";
 	private static final String CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS = "Search for Reservation";
 	private static final String CAMP_MENU_BACK = "Back";
+	
+	private static final String[] SITE_MENU_OPTIONS = new String[] { CAMP_MENU_OPTION_ALL_CAMPGROUNDS,
+			CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS, CAMP_MENU_BACK };
+	
 	private static final String[] CAMP_MENU_OPTIONS = new String[] { CAMP_MENU_OPTION_ALL_CAMPGROUNDS,
 			CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS, CAMP_MENU_BACK };
 	private Menu menu;
@@ -199,7 +195,17 @@ public class CampgroundCLI {
 	}
 
 	private void handleMakeReservation() {
-		System.out.print("Select Campground (first option 1 etc.. >>> ");
+		
+		String choice = (String) menu.getChoiceFromOptions(RESERVATION_MENU_OPTIONS);
+		if (choice.equals(RESERVATION_MENU_SEARCH_AVAILABLE)) {
+			handleMakeReservation();
+		} else if (choice.equals(RES_BACK))
+			parks();
+		{
+			System.exit(0);
+
+		}
+		System.out.print("Select A site (first option 1 etc.. >>> ");
 		Scanner userCampground = new Scanner(System.in);
 		String userCamp = userCampground.nextLine();
 
@@ -212,6 +218,8 @@ public class CampgroundCLI {
 		Scanner userDeparture = new Scanner(System.in);
 		String departureDate = userArrival.nextLine();
 		departure = wrongDateFormat(departureDate);
+
+
 		System.out.print("What is your name or id? ");
 		Scanner nameInput = new Scanner(System.in);
 		String name = userDeparture.nextLine();
@@ -270,6 +278,8 @@ public class CampgroundCLI {
 
 	private void availableSites() {
 		System.out.println("Results Matching Your Search Dates");
+		
+		
 
 		availableSites = siteDAO.sitesByDate(arrival, departure, (long)selectedCampgroundId);
 		//System.out.println(siteDAO.getAvailableSitesByCampgroundId(selectedCampgroundId, arrival, departure).size());
@@ -325,5 +335,7 @@ public class CampgroundCLI {
 		}
 		handleMakeReservation();
 	}
+	
+	
 
 }
