@@ -3,7 +3,7 @@ package com.techelevator;
 public class SiteOfCamp {
 	
 	private String name;
-	private long siteId;
+	private Long siteId;
 	private int campGroundId;
 	private int siteNumber;
 	private int maxOccupancy;
@@ -11,11 +11,11 @@ public class SiteOfCamp {
 	private int maxRvLength;
 	private boolean hasUtilities;
 
-	public long getSiteId() {
+	public Long getSiteId() {
 		return siteId;
 	}
 
-	public void setSiteId(long siteId) {
+	public void setSiteId(Long siteId) {
 		this.siteId = siteId;
 	}
 

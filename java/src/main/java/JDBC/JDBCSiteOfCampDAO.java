@@ -37,14 +37,14 @@ public class JDBCSiteOfCampDAO implements SiteOfCampDAO {
 		dates.add(departure);
 	  
 		Set <Long> anId =  new HashSet<Long>();
-	    anId.add(1L);
+	    anId.add(id);
 	    
 	    MapSqlParameterSource parameters = new MapSqlParameterSource();
 	    parameters.addValue("dates", dates);
 	    parameters.addValue("id", anId);
 	    
 	    String sql = "SELECT * FROM site WHERE campground_id = :id AND site_id "
-	            + "NOT IN (SELECT site_id FROM reservation WHERE (from_date, to_date) OVERLAPS ( :dates ) ) LIMIT 5";
+	            + "NOT IN (SELECT site_id FROM reservation WHERE (from_date, to_date) OVERLAPS ( :dates ) ) ORDER BY max_occupancy LIMIT 5 ";
 	    
 	    SqlRowSet rowset = jdbcSpecial.queryForRowSet(sql, parameters);
 	    

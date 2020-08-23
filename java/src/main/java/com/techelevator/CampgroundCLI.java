@@ -28,7 +28,8 @@ public class CampgroundCLI {
 	private static final String MAIN_MENU_OPTIONS_LIST = "View Parks to find Campgrounds to make a Reservation";
 	private static final String MAIN_MENU_EXIT = "Exit";
 	private static final String MAIN_MENU_OPTIONS_SEARCH_FOR_RES = "Search for a Reservation";
-	private static final String[] MAIN_MENU_OPTIONS = new String[] { MAIN_MENU_OPTIONS_LIST, MAIN_MENU_OPTIONS_SEARCH_FOR_RES, MAIN_MENU_EXIT };
+	private static final String[] MAIN_MENU_OPTIONS = new String[] { MAIN_MENU_OPTIONS_LIST,
+			MAIN_MENU_OPTIONS_SEARCH_FOR_RES, MAIN_MENU_EXIT };
 	private static final String PARK_MENU_DISPLAY_PARKS = "Select a Park";
 	private static final String[] PARK_MENU_OPTIONS = new String[] { PARK_MENU_DISPLAY_PARKS };
 	private static final String RES_BACK = "Back";
@@ -38,7 +39,7 @@ public class CampgroundCLI {
 	private static final String CAMP_MENU_OPTION_ALL_CAMPGROUNDS = "View Campgrounds";
 	private static final String CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS = "Search for Reservation";
 	private static final String CAMP_MENU_BACK = "Back";
-	private static final String CAMP_MENU_OPTION_PICK_SITE = "Pick site";
+	private static final String CAMP_MENU_OPTION_PICK_SITE = "Continue to pick site";
 
 	private static final String[] SITE_MENU_OPTIONS = new String[] { CAMP_MENU_OPTION_PICK_SITE, CAMP_MENU_BACK };
 
@@ -46,7 +47,6 @@ public class CampgroundCLI {
 			CAMP_MENU_SEARCH_AVAILABLE_RESERVATIONS, CAMP_MENU_BACK };
 	private Menu menu;
 	private int selectedCampgroundId;
-	private long selectedSiteId = 1;
 	private List<SiteOfCamp> availableSites = null;
 	private LocalDate arrival;
 	private LocalDate departure;
@@ -56,10 +56,11 @@ public class CampgroundCLI {
 	private ParkDAO parkDAO;
 	private Campground campground;
 	private SiteOfCamp campsite;
-	private Long campgroundLong = (long)0;
+	private Long campgroundLong = (long) 0;
 	Scanner userInput = new Scanner(System.in);
 	private int parkId = 0;
-	
+	String userName;
+	private String selectedSite = "";
 
 	public static void main(String[] args) {
 		BasicDataSource dataSource = new BasicDataSource();
@@ -76,10 +77,9 @@ public class CampgroundCLI {
 		String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
 		if (choice.equals(MAIN_MENU_OPTIONS_LIST)) {
 			parks();
-			
 
-		} 
-		
+		}
+
 		else if (choice.equals(MAIN_MENU_OPTIONS_SEARCH_FOR_RES))
 
 		{
@@ -143,11 +143,12 @@ public class CampgroundCLI {
 		String selectedPark = (String) menu.getChoiceFromOptions(parkArrayList.toArray());
 		parkId = parkDAO.getParkId(selectedPark);
 		List<List<String>> rows = new ArrayList<>();
-		List<String> headers = Arrays.asList("CampgroundId   ", "Campground      ", "Open Month  ", "Close Month  ", "Fee  ");
+		List<String> headers = Arrays.asList("CampgroundId   ", "Campground      ", "Open Month  ", "Close Month  ",
+				"Fee  ");
 		rows.add(headers);
 		for (Campground camp : campgroundDAO.getCampgroundByParkId(parkId)) {
 
-			String CampgroundId =  camp.getCampground_id().toString();
+			String CampgroundId = camp.getCampground_id().toString();
 			String campsite = camp.getName();
 			double openDate = camp.getOpenFromMM();
 			double closeDate = camp.getOpenToMM();
@@ -180,7 +181,7 @@ public class CampgroundCLI {
 	public static String formatAsTable(List<List<String>> rows) {
 		int[] maxLengths = new int[rows.get(0).size()];
 		for (List<String> row : rows) {
-			for (int i = 0; i < row.size()-1; i++) {
+			for (int i = 0; i < row.size() - 1; i++) {
 				maxLengths[i] = Math.max(maxLengths[i], row.get(i).length());
 			}
 		}
@@ -204,16 +205,16 @@ public class CampgroundCLI {
 
 	private void handleMakeReservation(int parkId) {
 
-		
 		List<List<String>> rows = new ArrayList<>();
-		List<String> headers = Arrays.asList("CampgroundId   ", "Campground      ", "Open Month  ", "Close Month  ", "Fee  ");
+		List<String> headers = Arrays.asList("CampgroundId   ", "Campground      ", "Open Month  ", "Close Month  ",
+				"Fee  ");
 		rows.add(headers);
-		
+
 		for (Campground camp : campgroundDAO.getCampgroundByParkId(parkId)) {
 
 			int optionNum = 0;
 			String optionString = String.valueOf(optionNum);
-			String CampgroundId =  camp.getCampground_id().toString();
+			String CampgroundId = camp.getCampground_id().toString();
 			String campsite = camp.getName();
 			double openDate = camp.getOpenFromMM();
 			double closeDate = camp.getOpenToMM();
@@ -228,7 +229,7 @@ public class CampgroundCLI {
 
 		}
 		System.out.println(formatAsTable(rows));
-		System.out.print("Select A Campground");
+		System.out.print("Select A Campground >>>");
 		String userCamp = userInput.nextLine();
 		campgroundLong = Long.parseLong(userCamp);
 		String arrivalDate = "";
@@ -238,15 +239,18 @@ public class CampgroundCLI {
 		if (choice.equals(CAMP_MENU_OPTION_PICK_SITE)) {
 
 			System.out.print("What is the arrival date? (YYYY/MM/DD)");
-			
+
 			arrivalDate = userInput.nextLine();
 			arrival = wrongDateFormat(arrivalDate);
 
 			System.out.print("What is the departure date? (YYYY/MM/DD)");
-			
+
 			departureDate = userInput.nextLine();
 			departure = wrongDateFormat(departureDate);
-			
+
+			System.out.print("What is your name or id? ");
+			userName = userInput.nextLine();
+
 			availableSites();
 
 		} else if (choice.equals(CAMP_MENU_BACK))
@@ -255,14 +259,6 @@ public class CampgroundCLI {
 			System.exit(0);
 		}
 
-		System.out.print("What is your name or id? ");
-		String name = userInput.nextLine();
-
-		reservationDAO.makeReservation(selectedSiteId, name, arrival, departure);
-
-		System.out.println("The reservation is under: ");
-
-		availableSites();
 	}
 
 	LocalDate wrongDateFormat(String dateEnteredByUser) {
@@ -311,6 +307,7 @@ public class CampgroundCLI {
 	}
 
 	private void availableSites() {
+
 		System.out.println("Results Matching Your Search Dates");
 
 		availableSites = siteDAO.sitesByDate(arrival, departure, campgroundLong);
@@ -319,17 +316,51 @@ public class CampgroundCLI {
 		System.out.printf("\n %-15s %-15s \t%-15s %-15s \t%-15s", "Site No.", "Max Occup.", "Accessible?", "RV Length",
 				"Utility");
 		String trueOrFalse = "";
+		String trueOrFalse2 = "";
 		for (SiteOfCamp sites : availableSites) {
 			if (sites.isAccessible()) {
 				trueOrFalse = "Yes";
 			} else {
 				trueOrFalse = "No";
 			}
-			
+			if (sites.isHasUtilities()) {
+				trueOrFalse2 = "Yes";
+			} else {
+				trueOrFalse2 = "No";
+			}
+
 			System.out.printf("\n %-15s %-15s \t%-15s %-15s \t%-15s", sites.getSiteId(), sites.getMaxOccupancy(),
-					sites.isAccessible(), sites.getMaxRvLength(), sites.isHasUtilities());
+					trueOrFalse, sites.getMaxRvLength(), trueOrFalse2);
+		}
+		System.out.println("");
+		System.out.println("Pick a site?");
+		selectedSite = userInput.nextLine();
+		long value1 = Long.parseLong(selectedSite);
+		boolean isFalse = false;
+
+		for (SiteOfCamp sites : availableSites) {
+			sites.getSiteId();
+			if (sites.getSiteId().equals(Long.parseLong(selectedSite))) {
+				isFalse = true;
+				break;
+			}
+
 		}
 
+		if (isFalse = true) {
+			reservationDAO.makeReservation(value1, userName, arrival, departure);
+			System.out.println("");
+
+			System.out.flush();
+			System.out.println(
+					"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+			System.out.println("The reservation is under: " + userName);
+			System.out.println("Thank You for Booking");
+			System.out.println("\n\n\n");
+
+			run();
+		}
 		String rvLength = "";
 		String utility = "";
 		String sumCost = "";
@@ -352,7 +383,7 @@ public class CampgroundCLI {
 		}
 		handleMakeReservation(parkId);
 	}
-	
+
 	public void retrieveReservation() {
 
 		System.out.println("What is your reservationid?");
@@ -364,7 +395,7 @@ public class CampgroundCLI {
 		LocalDate toDate = reservation.getToDate();
 		LocalDate madeDate = reservation.getMakeDate();
 		long resIdnum = reservation.getSiteId();
-		String resId = String.valueOf(resIdnum); 
+		String resId = String.valueOf(resIdnum);
 		String madeDate1 = madeDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
 		String fromDate1 = fromDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
 		String toDate1 = toDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL));
@@ -375,15 +406,7 @@ public class CampgroundCLI {
 		System.out.println(toDate1);
 		System.out.println("To:");
 		System.out.println(fromDate1);
-		
-		
-		
-		
-		
-		}
 
-	
-
-
+	}
 
 }
