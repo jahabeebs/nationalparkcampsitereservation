@@ -1,0 +1,22 @@
+Group 5 Feedback
+
+1. The messaging seems a bit off here:
+
+3
+Reservation id: 3
+Jones Reservation
+Park ID: 2
+From:
+Tuesday, August 18, 2020
+To:
+Saturday, August 22, 2020
+Oops, we couldn't find this id. Please try again!
+What is your reservation id #?
+
+I found the reservation, but it still says we couldn't find it.
+
+
+2. Good job on catching bad input on the date input.
+
+
+3.
